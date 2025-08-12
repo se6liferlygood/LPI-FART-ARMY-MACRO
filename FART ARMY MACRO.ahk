@@ -192,7 +192,7 @@ toolbarm(ThisHotKey) { ;use toolbar
         tindex := (tindex+1)*(tindex<tmax&&tindex<9&&tindex>=tmin)+tmin*(tindex>=tmax||tindex<tmin)
         Sleep delay*tmode-!tmode
     }
-    while(GetKeyState("z","P")&&!tmode) {
+    while(GetKeyState(key,"P")&&!tmode) {
         Sleep 10
     }
 }

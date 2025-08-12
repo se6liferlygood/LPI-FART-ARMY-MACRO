@@ -12,7 +12,7 @@ InputBox2(prompt,default) {
     return prompt=""? default:InputBox(prompt,title,,default).Value
 }
 
-global vars := ["multi7","swordnkey","per","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart"]
+global vars := ["multi7","swordnkey","per","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey"]
 global space := Chr(3)
 saveSettings() {
     global vars, space
@@ -253,13 +253,32 @@ autoc() { ;customize autoclicker
     }
 }
 
-global cfunc := [toolbar,speed,autoc,dance7,CustomizeKeybinds]
+global msg := "/e dance7"
+global chatKey := "/"
+autochat(ThisHotKey) {
+    oclip := A_Clipboard
+    A_Clipboard := msg
+    SendEvent("{RAW}" chatKey)
+    Sleep 20
+    SendEvent("^v")
+    Sleep 20
+    SendEvent("{Enter}")
+    Sleep 20
+    A_Clipboard := oclip
+}
+
+cautochat() {
+    global msg := InputBox2("what will this macro auto chat?",msg)
+    global chatKey := InputBox2("what key do you press to chat?",chatKey)
+}
+
+global cfunc := [toolbar,speed,autoc,dance7,cautochat,CustomizeKeybinds]
 
 customizeMenu() {
     choose := "."
     global cfunc, title
     while(choose!="") {
-        choose := InputBox("TYPE THE NUMBER TO CHOOSE`n`n1. customize toolbar macro`n2. customize speed macro`n3. customize autoclicker`n4. customize dance7 jump multiplier macro`n5. customize keybinds`n`npress cancel when you are done",title,'H' A_ScreenHeight/3).Value
+        choose := InputBox("TYPE THE NUMBER TO CHOOSE`n`n1. customize toolbar macro`n2. customize speed macro`n3. customize autoclicker`n4. customize dance7 jump multiplier macro`n5. customize auto chat message`n6. customize keybinds`n`npress cancel when you are done",title,'H' A_ScreenHeight/3).Value
         try {
             cfunc[choose]()
         }
@@ -313,7 +332,8 @@ global KeyBinds := [
     "*!x", ;speed
     "*!c", ;autoclicker
     "*!v", ;dance7 jump
-    "*!f" ;freeze toggle
+    "*!f", ;freeze toggle
+    "*!q" ;auto chat
 ]
 
 global keybindsm := [ ;match
@@ -321,7 +341,8 @@ global keybindsm := [ ;match
     speedm,
     autoclick,
     dance7jump,
-    freezetoggle
+    freezetoggle,
+    autochat
 ]
 
 global keymap := Map() ;map for checking if duplicate keybinds
@@ -331,7 +352,7 @@ CustomizeKeybinds() {
     global KeyBinds, keybindsm, keymap, title
     while(true) {
         try {
-            opt := Integer(InputBox("CHOOSE WHAT MACRO KEYBIND TO CUSTOMIZE!`n`n1. toolbar macro: " translatekeybind(KeyBinds[1]) "`n2. speed macro: " translatekeybind(KeyBinds[2]) "`n3. autoclicker: " translatekeybind(KeyBinds[3]) "`n4. dance7 jump: " translatekeybind(KeyBinds[4]) "`n5. freeze toggle: " translatekeybind(KeyBinds[5]) "`n`nPRESS CANCEL WHEN YOU ARE DONE!",title,"H" A_ScreenHeight/3).Value)
+            opt := Integer(InputBox("CHOOSE WHAT MACRO KEYBIND TO CUSTOMIZE!`n`n1. toolbar macro: " translatekeybind(KeyBinds[1]) "`n2. speed macro: " translatekeybind(KeyBinds[2]) "`n3. autoclicker: " translatekeybind(KeyBinds[3]) "`n4. dance7 jump: " translatekeybind(KeyBinds[4]) "`n5. freeze toggle: " translatekeybind(KeyBinds[5]) "`n6. auto chat: " translatekeybind(KeyBinds[6]) "`n`nPRESS CANCEL WHEN YOU ARE DONE!",title,"H" A_ScreenHeight/3).Value)
             keybind := CreateKeybind(KeyBinds[opt])
             if(keymap[keybind]&&keybind!=KeyBinds[opt]) {
                 MsgBox("DUPLICATE KEYBIND!`n`nTRY SOMETHING ELSE!",title)
@@ -361,6 +382,6 @@ if(!restart) {
     restart := false
     saveSettings()
 }
-while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nspeed macro: " translatekeybind(KeyBinds[2]) "`nautoclicker: " translatekeybind(KeyBinds[3]) "`ndance7 jump macro: " translatekeybind(KeyBinds[4]) "`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`n`npress OK to customize the macros`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():ExitApp()) {
+while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nspeed macro: " translatekeybind(KeyBinds[2]) "`nautoclicker: " translatekeybind(KeyBinds[3]) "`ndance7 jump macro: " translatekeybind(KeyBinds[4]) "`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`nauto chat: " translatekeybind(KeyBinds[6]) "`n`npress OK to customize the macros`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():ExitApp()) {
     checkEnviroment()
 }

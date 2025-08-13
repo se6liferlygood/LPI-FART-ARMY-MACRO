@@ -87,14 +87,15 @@ SuspendedPID := Map()
 SuspendedPID.Default := false
 freeze(bool:=false,toggle:=true,key:="") {
     PID := WinGetPID("A")
-    h := DllCall("OpenProcess", "uInt", 0x1F0FFF, "Int", 0, "Int", PID)&&!WinActive("FART ARMY MACRO")
-    if(((bool&&!SuspendedPID[PID])||(toggle&&!SuspendedPID[PID]))&&h) {
+    h := DllCall("OpenProcess", "uInt", 0x1F0FFF, "Int", 0, "Int", PID)
+    safe := !WinActive("FART ARMY MACRO")
+    if(((bool&&!SuspendedPID[PID])||(toggle&&!SuspendedPID[PID]))&&h&&safe) {
         if(toggle) {
             ToolTip("FREEZE TOGGLE!`n`nPRESS " key " TO UNFREEZE!",0,0,2)
         }
         DllCall("ntdll.dll\NtSuspendProcess", "Int", h)
         SuspendedPID[PID] := true
-    } else if(h&&((toggle&&SuspendedPID[PID])||(!bool&&SuspendedPID[PID]))) {
+    } else if(safe&&h&&((toggle&&SuspendedPID[PID])||(!bool&&SuspendedPID[PID]))) {
         if(toggle) {
             ToolTip(,,,2)
         }

@@ -85,12 +85,12 @@ checkEnviroment()
 
 SuspendedPID := Map()
 SuspendedPID.Default := false
-freeze(bool:=false,toggle:=true) {
+freeze(bool:=false,toggle:=true,key:="") {
     PID := WinGetPID("A")
-    h := DllCall("OpenProcess", "uInt", 0x1F0FFF, "Int", 0, "Int", PID)
+    h := DllCall("OpenProcess", "uInt", 0x1F0FFF, "Int", 0, "Int", PID)&&!WinActive("FART ARMY MACRO")
     if(((bool&&!SuspendedPID[PID])||(toggle&&!SuspendedPID[PID]))&&h) {
         if(toggle) {
-            ToolTip("FREEZE TOGGLE!`n`nPRESS ALT F TO UNFREEZE!",0,0,2)
+            ToolTip("FREEZE TOGGLE!`n`nPRESS " key " TO UNFREEZE!",0,0,2)
         }
         DllCall("ntdll.dll\NtSuspendProcess", "Int", h)
         SuspendedPID[PID] := true
@@ -108,7 +108,7 @@ getkey(key) {
 }
 
 freezetoggle(ThisHotkey) {
-    freeze()
+    freeze(,,translatekeybind(A_ThisHotkey))
 }
 
 global multi7 := 4, swordnkey := ["2","3"] ;key is second index

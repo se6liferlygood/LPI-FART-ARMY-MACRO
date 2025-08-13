@@ -71,7 +71,7 @@ allowedf["FART ARMY MACRO.ahk"] := true
 
 checkEnviroment() {
     if(A_ScriptName != "FART ARMY MACRO.ahk") {
-        MsgBox("THIS FILE MUST BE NAMED FART ARMY MACRO")
+        MsgBox("THIS FILE MUST BE NAMED FART ARMY MACRO",title)
         ExitApp()
     }
     loop Files A_ScriptDir "\*" {
@@ -128,7 +128,7 @@ dance7jump(ThisHotKey) { ;dance7 jump multiplier
 }
 
 dance7() { ;customize dance7 jump multiplier
-    global swordnkey
+    global swordnkey, title
     try {
         swordnkey[2] := Integer(InputBox2("where is key in your toolbar?",swordnkey[2]))
         swordnkey[2] := Abs(swordnkey[2])+(swordnkey[2]=0)
@@ -137,7 +137,7 @@ dance7() { ;customize dance7 jump multiplier
         global multi7 := Integer(InputBox2("dance7 jump minimum multiplier",multi7))
         multi7 := Abs(multi7)+(multi7=0)
     } catch {
-        MsgBox("you were supposed to type a number")
+        MsgBox("you were supposed to type a number",title)
     }
 }
 
@@ -160,6 +160,7 @@ speed() { ;customize speed
     global keys := StrLower(InputBox2("what wasd keys will the speed macro hold down?", keys))
     global keysd := "{space down}"
     global keysu := "{space up}"
+    global title
     dupecheck := Map()
     dupecheck.Default := false
     str := ""
@@ -178,7 +179,7 @@ speed() { ;customize speed
         per := Abs(per)+(per=0)*0.15
         global x := [A_ScreenWidth/2+A_ScreenWidth*per,A_ScreenWidth/2-A_ScreenWidth*per]
     } catch {
-        MsgBox("you were supposed to type a number")
+        MsgBox("you were supposed to type a number",title)
     }
 }
 
@@ -198,8 +199,8 @@ toolbarm(ThisHotKey) { ;use toolbar
 }
 
 toolbar() { ;customize use toolbar
-    global tindex := -1
-    global tmode := (MsgBox("CURRENT MODE: " (tmode? "FULL AUTO":"SEMI AUTO") "`n`npress yes to keep current mode`n`npress no to change to " (!tmode? "FULL AUTO":"SEMI AUTO"),,"YesNo")="Yes")? tmode:!tmode
+    global tindex := -1, title
+    global tmode := (MsgBox("CURRENT MODE: " (tmode? "FULL AUTO":"SEMI AUTO") "`n`npress yes to keep current mode`n`npress no to change to " (!tmode? "FULL AUTO":"SEMI AUTO"),title,"YesNo")="Yes")? tmode:!tmode
     global tmash := StrLower(InputBox2("what keys will be pressed every gear swap?",tmash))
     try {
         global tmin := Integer(InputBox2("where in the toolbar will this macro start?",tmin))
@@ -209,7 +210,7 @@ toolbar() { ;customize use toolbar
         global delay := Integer(InputBox2(tmode? "milisecond delay between every gear swap?":"",delay))
         delay := Abs(delay)+(delay=0)*25
     } catch {
-        MsgBox("you were supposed to type a number")
+        MsgBox("you were supposed to type a number",title)
     }
     if(tmin > tmax) {
         t := tmax

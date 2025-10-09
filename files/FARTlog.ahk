@@ -4,6 +4,26 @@
 SetTitleMatchMode(3)
 ProcessSetPriority("H")
 
+global users := [] ;all users roblox directories needs to get checked in case running as admin changes what user they run the macro as (otherwise there would be problems)
+
+loop files, "C:\Users\*.*", "D" {
+    try {
+        test := A_LoopFilePath "\AppData\Local\Roblox\logs\"
+        ;MsgBox(test)
+        if(DirExist(test)) {
+            try {
+                code := Random()
+                FileAppend("",test code)
+                FileDelete(test code) ;hopefully  this will make so that it only adds if the macro has perms
+                users.Push(test)
+                ;MsgBox("EXISTS " test)
+            }
+        }
+    } catch as err {
+        ;MsgBox(err.Message)
+    }
+}
+
 ahkExist(ahkFile) {
     prevDetectHiddenWindows := A_DetectHiddenWindows, prevTitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows(true), SetTitleMatchMode(2) ;2 is default
@@ -36,26 +56,32 @@ checkMain() {
 }
 
 global version := "", placeID := "", jobID := "", logPath := ""
-path := StrReplace(A_AppData,"\Roaming","\Local\Roblox\logs\*")
 getLogFile() {
-    global logPath := ""
+    global logPath := "", users
     count := 0
-    loop files path ".log" {
-        if(InStr(A_LoopFileName,"_Player")>0) {
-            try {
-                FileDelete(A_LoopFilePath)
-            } catch {
-                logPath := A_LoopFilePath
-                count++
+    loop users.Length {
+        path := users[A_Index]
+        loop files path "*.log" {
+            if(InStr(A_LoopFileName,"_Player")>0) {
+                try {
+                    FileDelete(A_LoopFilePath)
+                } catch as err {
+                    logPath := A_LoopFilePath
+                    count++
+                }
             }
         }
     }
     return count
 }
+
+FileDelete("info")
+FileAppend("","info")
+
 try {
     getLogFile()
 } catch {
-    ExitApp() ;yeah the user wont be able to serverhop or rejoin if this is the case
+    ExitApp() ;yeah the user wont be able to serverhop or rejoin or lag switch if this is the case
 }
 
 while(true) {

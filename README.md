@@ -8,3 +8,5 @@ you need autohotkey v2 to run this macro
 https://www.autohotkey.com/
 
 MACRO DOWNLOAD LINK: https://github.com/se6liferlygood/LPI-FART-ARMY-MACRO/archive/refs/heads/main.zip
+
+dont forget to extract the zip file once its downloaded (otherwise it wont work)

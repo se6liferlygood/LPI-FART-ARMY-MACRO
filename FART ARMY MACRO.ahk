@@ -297,7 +297,7 @@ toolbarm(ThisHotKey) { ;use toolbar
     key := getkey(A_ThisHotkey)
     while((tmode&&GetKeyState(key,"P"))||A_Index=1) {
         SendEvent("{" (tindex>=10? 0:tindex) "}{LButton}{Raw}" tmash)
-        tindex := tmin+Mod(tindex,tmax-tmin+1)
+        tindex := tmin+Mod(tindex-tmin+1,tmax-tmin+1)
         Sleep delay*tmode-!tmode
     }
     while(GetKeyState(key,"P")&&!tmode) {

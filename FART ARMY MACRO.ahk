@@ -481,7 +481,7 @@ serverHop() {
     global placeID, jobID, sList, title, user
     getCurrent()
     if(version!=""&&user!=A_UserName) {
-        MsgBox("YOU ARE USING THIS MACRO ON: " A_UserName "`nBUT YOU ARE USING ROBLOX ON: " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
+        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
         return
     }
     if(placeID!=""&&jobID!=""&&sList!=[]) {
@@ -501,7 +501,7 @@ rejoin() {
     global placeID, jobID, title
     getCurrent()
     if(version!=""&&user!=A_UserName) {
-        MsgBox("YOU ARE USING THIS MACRO ON: " A_UserName "`nBUT YOU ARE USING ROBLOX ON: " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
+        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
         return
     }
     if(placeID!=""&&jobID!="") {

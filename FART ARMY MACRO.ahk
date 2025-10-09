@@ -31,6 +31,7 @@ checkReader() {
 global title := "FART ARMY MACRO"
 
 InputBox2(prompt,default) {
+    global title
     return prompt=""? default:InputBox(prompt,title,,default).Value
 }
 
@@ -111,27 +112,13 @@ checkEnviroment() {
 }
 checkEnviroment()
 
+global ComSpec := EnvGet("ComSpec")
 executeCommand(command) {
-    ComSpec := EnvGet("ComSpec")
+    global ComSpec
     RunWait(ComSpec . ' /C ' . command, , "Hide")
 }
 
 global version := "", ltime := 18
-
-getVersion() {
-    global version
-    done := false
-    while(!done&&A_Index<20) {
-        done := true
-        try {
-            arr := StrSplit(FileRead("files\info"),Chr(10))[1]
-            version := arr=""? version:arr
-        } catch {
-            done := false
-            Sleep 50
-        }
-    }
-}
 
 blockInternetAccess(filePath := version "RobloxPlayerBeta.exe") {
     if(filePath != "") {
@@ -148,7 +135,7 @@ unblockInternetAccess(filePath := version "RobloxPlayerBeta.exe") {
 
 exits(a,b) {
     global version
-    getVersion()
+    getCurrent(false)
     try {
         unblockInternetAccess()
     }
@@ -156,13 +143,14 @@ exits(a,b) {
 
 OnExit(exits)
 
+global xx := A_ScreenWidth*0.1, yy := A_ScreenHeight*0.1
+
 lagSwitch(ThisHotKey) {
-    global title, version, ltime
-    xx := A_ScreenWidth*0.1, yy := A_ScreenHeight*0.1
+    global title, version, ltime, xx, yy
     key := getkey(A_ThisHotkey)
     if(A_IsAdmin) {
         altkey := InStr(A_ThisHotkey,"*!")=1
-        getVersion()
+        getCurrent(false)
         if(version != "") {
             blockInternetAccess()
             time := A_Now
@@ -303,7 +291,7 @@ speed() { ;customize speed
     }
 }
 
-global tmin := 5, tmax := 10, tmode := true, tmash := "qe", tindex := -1, delay := 25 ;tmode false = semi auto, tmode true = full auto
+global tmin := 1, tmax := 10, tmode := true, tmash := "qe", tindex := -1, delay := 25 ;tmode false = semi auto, tmode true = full auto
 
 toolbarm(ThisHotKey) { ;use toolbar
     global tmin, tmax, tmode, tmash, tindex := (tindex=-1)? tmin:tindex
@@ -395,14 +383,12 @@ cautochat() {
     global chatKey := InputBox2("what key do you press to chat?",chatKey)
 }
 
-global version := "", placeID := "", jobID := "", sList := []
+global user := "", version := "", placeID := "", jobID := "", sList := [], whr := ComObject("WinHttp.WinHttpRequest.5.1")
 
 getServers(place,exclude) {
-    global title
+    global title, whr
     try {
-        url := "https://games.roblox.com/v1/games/" place "/servers/0?excludeFullGames=true&limit=50"
-        whr := ComObject("WinHttp.WinHttpRequest.5.1")
-        whr.Open("GET", url, False), whr.Send()
+        whr.Open("GET", "https://games.roblox.com/v1/games/" place "/servers/0?excludeFullGames=true&limit=50", False), whr.Send()
         arr := StrSplit(whr.ResponseText,'"')
         Sarr := []
         loop arr.Length {
@@ -418,6 +404,9 @@ getServers(place,exclude) {
                 MsgBox(whr.ResponseText,title)
             }
         }
+    }
+    try {
+        whr.Close() ;I think have to do this, am not so sure
     }
 }
 
@@ -463,18 +452,20 @@ closeRoblox() {
     }
 }
 
-getCurrent() {
-    global placeID, jobID, sList
+getCurrent(update := true) {
+    global placeID, jobID, sList, title, version, user
     done := false
     while(!done&&A_Index<20) {
         done := true
         try {
             arr := StrSplit(FileRead("files\info"),Chr(10))
-            if(arr[2]!=placeID||arr[3]!=jobID) {
+            if(update&&(arr[2]!=placeID||arr[3]!=jobID)) {
                 placeID := arr[2]=""? placeID:arr[2]
                 jobID := arr[3]=""? jobID:arr[3]
                 sList := getServers(placeID,jobID)
             }
+            version := arr[1]
+            user := StrSplit(version,"\")[3]
         } catch as err {
             Sleep 50
             done := false
@@ -487,8 +478,12 @@ joinLink(place,job) {
 }
 
 serverHop() {
-    global placeID, jobID, sList, title
+    global placeID, jobID, sList, title, user
     getCurrent()
+    if(version!=""&&user!=A_UserName) {
+        MsgBox("YOU ARE USING THIS MACRO ON: " A_UserName "`nBUT YOU ARE USING ROBLOX ON: " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
+        return
+    }
     if(placeID!=""&&jobID!=""&&sList!=[]) {
         closeRoblox()
         Run joinLink(placeID,sList[sList.Length])
@@ -505,6 +500,10 @@ serverHop() {
 rejoin() {
     global placeID, jobID, title
     getCurrent()
+    if(version!=""&&user!=A_UserName) {
+        MsgBox("YOU ARE USING THIS MACRO ON: " A_UserName "`nBUT YOU ARE USING ROBLOX ON: " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
+        return
+    }
     if(placeID!=""&&jobID!="") {
         closeRoblox()
         Run joinLink(placeID,jobID)

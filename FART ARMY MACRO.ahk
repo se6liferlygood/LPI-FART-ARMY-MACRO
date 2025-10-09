@@ -176,7 +176,6 @@ lagSwitch(ThisHotKey) {
     } else {
         MsgBox("YOU MUST RUN THIS SCRIPT AS AN ADMIN FOR LAG SWITCH TO WORK!",title)
     }
-    blocked := 0
 }
 
 clagSwitch() {
@@ -193,7 +192,7 @@ SuspendedPID.Default := false
 freeze(bool:=false,toggle:=false,key:="") {
     PID := WinGetPID("A")
     h := DllCall("OpenProcess", "uInt", 0x1F0FFF, "Int", 0, "Int", PID)
-    safe := !WinActive("FART ARMY MACRO")
+    safe := WinActive("Roblox")
     if(safe&&h) {
         if((bool&&!SuspendedPID[PID])||(toggle&&!SuspendedPID[PID])) {
             if(toggle) {

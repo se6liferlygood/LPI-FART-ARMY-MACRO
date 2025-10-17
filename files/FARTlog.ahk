@@ -9,12 +9,11 @@ global users := [] ;all users roblox directories needs to get checked in case ru
 loop files, "C:\*.*", "D" {
     try {
         test := A_LoopFilePath "\Roblox\logs\"
-        ;MsgBox(test)
         if(DirExist(test)) {
             try {
                 code := Random()
                 FileAppend("",test code)
-                FileDelete(test code) ;hopefully  this will make so that it only adds if the macro has perms
+                FileDelete(test code)
                 users.Push(test)
             }
         }
@@ -24,18 +23,14 @@ loop files, "C:\*.*", "D" {
 loop files, "C:\Users\*.*", "D" {
     try {
         test := A_LoopFilePath "\AppData\Local\Roblox\logs\"
-        ;MsgBox(test)
         if(DirExist(test)) {
             try {
                 code := Random()
                 FileAppend("",test code)
-                FileDelete(test code) ;hopefully  this will make so that it only adds if the macro has perms
+                FileDelete(test code)
                 users.Push(test)
-                ;MsgBox("EXISTS " test)
             }
         }
-    } catch as err {
-        ;MsgBox(err.Message)
     }
 }
 
@@ -90,7 +85,9 @@ getLogFile() {
     return count
 }
 
-FileDelete("info")
+try {
+    FileDelete("info")
+}
 FileAppend("","info")
 
 try {
@@ -126,18 +123,18 @@ while(true) {
             str := SubStr(str,1,InStr(str," at ")-1)
             placeID := str
             update := true
-        } else if(A_Index<10) {
-            if(InStr(rline,"[FLog::UpdateController] WindowsUpdateController: updaterFullPath: ") > 0) {
-                version := StrReplace(SubStr(rline,67+InStr(rline,"[FLog::UpdateController] WindowsUpdateController: updaterFullPath: ")),"\RobloxPlayerInstaller.exe","\")
-                update := true
-            }
+        } else if(InStr(rline,"[FLog::UpdateController] WindowsUpdateController: updaterFullPath: ") > 0) {
+            version := StrReplace(SubStr(rline,67+InStr(rline,"[FLog::UpdateController] WindowsUpdateController: updaterFullPath: ")),"\RobloxPlayerInstaller.exe","\")
+            update := true
         }
         while(lcurrent >= lsize) {
             lcurrent := lsize
             lsize := FileGetSize(logPath)
             if(update) {
                 try {
-                    FileDelete("info")
+                    try {
+                        FileDelete("info")
+                    }
                     FileAppend(version "`n" placeID "`n" jobID,"info")
                     update := false
                     ;ToolTip(FileRead("info"),0,0)

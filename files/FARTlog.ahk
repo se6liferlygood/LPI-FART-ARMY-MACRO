@@ -16,7 +16,6 @@ loop files, "C:\*.*", "D" {
                 FileAppend("",test code)
                 FileDelete(test code) ;hopefully  this will make so that it only adds if the macro has perms
                 users.Push(test)
-                MsgBox("EXISTS " test)
             }
         }
     }

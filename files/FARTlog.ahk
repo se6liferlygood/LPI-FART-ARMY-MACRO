@@ -126,6 +126,10 @@ while(true) {
         } else if(InStr(rline,"[FLog::UpdateController] WindowsUpdateController: updaterFullPath: ") > 0) {
             version := StrReplace(SubStr(rline,67+InStr(rline,"[FLog::UpdateController] WindowsUpdateController: updaterFullPath: ")),"\RobloxPlayerInstaller.exe","\")
             update := true
+        } else if(InStr(rline,"[FLog::UpdateController] Checking if updater exists at")) {
+            version := SubStr(rline,1,InStr(rline,"RobloxPlayerInstaller.exe")-1)
+            version := StrReplace(SubStr(version,InStr(version,"C:\")),"\RobloxPlayerInstaller.exe")
+            update := true
         }
         while(lcurrent >= lsize) {
             lcurrent := lsize

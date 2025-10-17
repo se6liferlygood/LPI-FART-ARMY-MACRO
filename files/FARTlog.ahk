@@ -6,6 +6,22 @@ ProcessSetPriority("H")
 
 global users := [] ;all users roblox directories needs to get checked in case running as admin changes what user they run the macro as (otherwise there would be problems)
 
+loop files, "C:\*.*", "D" {
+    try {
+        test := A_LoopFilePath "\Roblox\logs\"
+        ;MsgBox(test)
+        if(DirExist(test)) {
+            try {
+                code := Random()
+                FileAppend("",test code)
+                FileDelete(test code) ;hopefully  this will make so that it only adds if the macro has perms
+                users.Push(test)
+                MsgBox("EXISTS " test)
+            }
+        }
+    }
+}
+
 loop files, "C:\Users\*.*", "D" {
     try {
         test := A_LoopFilePath "\AppData\Local\Roblox\logs\"

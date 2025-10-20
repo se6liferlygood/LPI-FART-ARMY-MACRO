@@ -382,7 +382,7 @@ cautochat() {
     global chatKey := InputBox2("what key do you press to chat?",chatKey)
 }
 
-global user := "", version := "", placeID := "", jobID := "", sList := [], whr := ComObject("WinHttp.WinHttpRequest.5.1")
+global version := "", placeID := "", jobID := "", sList := [], whr := ComObject("WinHttp.WinHttpRequest.5.1")
 
 getServers(place,exclude) {
     global title, whr
@@ -452,7 +452,7 @@ closeRoblox() {
 }
 
 getCurrent(update := true) {
-    global placeID, jobID, sList, title, version, user
+    global placeID, jobID, sList, title, version
     done := false
     while(!done&&A_Index<20) {
         done := true
@@ -464,7 +464,6 @@ getCurrent(update := true) {
                 sList := getServers(placeID,jobID)
             }
             version := arr[1]
-            user := StrSplit(version,"\")[3]
         } catch as err {
             Sleep 50
             done := false
@@ -476,9 +475,64 @@ joinLink(place,job) {
     return "roblox://experiences/start?placeId=" place "&gameInstanceId=" job
 }
 
+GetProcessUser(PID) ;NOT WRITTEN BY ME! https://pastebin.com/fQDtXTrr
+{
+    CharSet := "UTF-16"
+    TOKEN_QUERY := 0x0008
+    PROCESS_QUERY_LIMITED_INFORMATION := 0x1000
+    
+    hProcess := DllCall("OpenProcess", "uint", PROCESS_QUERY_LIMITED_INFORMATION, "int", 0, "uint", PID, "ptr")
+    if !hProcess
+        return "Access Denied"
+    
+    hToken := 0
+    if !DllCall("advapi32.dll\OpenProcessToken", "ptr", hProcess, "uint", TOKEN_QUERY, "ptr*", &hToken)
+    {
+        DllCall("CloseHandle", "ptr", hProcess)
+        return "Access Denied"
+    }
+    
+    size := 0
+    DllCall("advapi32.dll\GetTokenInformation", "ptr", hToken, "int", 1, "ptr", 0, "uint", 0, "uint*", &size)
+    TOKENINFO := Buffer(size, 0)
+    
+    if !DllCall("advapi32.dll\GetTokenInformation", "ptr", hToken, "int", 1, "ptr", TOKENINFO, "uint", size, "uint*", &size)
+    {
+        DllCall("CloseHandle", "ptr", hToken)
+        DllCall("CloseHandle", "ptr", hProcess)
+        return "Access Denied"
+    }
+    
+    pSID := NumGet(TOKENINFO, 0, "ptr")
+    cchName := 260
+    cchDomain := 260
+    Name := Buffer(cchName * 2, 0)
+    Domain := Buffer(cchDomain * 2, 0)
+    peUse := 0
+    
+    if !DllCall("advapi32.dll\LookupAccountSidW", "ptr", 0, "ptr", pSID, "ptr", Name, "uint*", &cchName, "ptr", Domain, "uint*", &cchDomain, "uint*", &peUse)
+    {
+        user := "Unknown"
+    }
+    else
+    {
+        user := StrGet(Domain, CharSet) "\" StrGet(Name, CharSet)
+    }
+    
+    DllCall("CloseHandle", "ptr", hToken)
+    DllCall("CloseHandle", "ptr", hProcess)
+    
+    return SubStr(user,InStr(user,"\")+1) ;I only added this
+}
+
 serverHop() {
-    global placeID, jobID, sList, title, user
+    global placeID, jobID, sList, title
     getCurrent()
+    try {
+        user := GetProcessUser(WinGetPID("Roblox"))
+    } catch {
+        user := A_UserName ,placeID := "", jobID := "", sList := []
+    }
     if(version!=""&&user!=A_UserName) {
         MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
         return
@@ -499,6 +553,11 @@ serverHop() {
 rejoin() {
     global placeID, jobID, title
     getCurrent()
+    try {
+        user := GetProcessUser(WinGetPID("Roblox"))
+    } catch {
+        user := A_UserName ,placeID := "", jobID := "", sList := []
+    }
     if(version!=""&&user!=A_UserName) {
         MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
         return

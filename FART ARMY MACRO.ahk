@@ -267,7 +267,7 @@ speedm(ThisHotkey) { ;speed
     SendEvent(keysd)
     while GetKeyState(key,"P")||A_Index=1 {
         loop 2 {
-            MouseMove(x[A_Index],0)
+            MouseMove(x[A_Index],y)
             Sleep 16
         }
     }

@@ -382,7 +382,7 @@ autochat(ThisHotKey) {
     Sleep 25
     SendEvent("^v")
     Sleep 25
-    SendEvent("{Enter}")
+    SendEvent("{alt up}{Enter}")
     Sleep 25
     A_Clipboard := oclip
     BlockInput(0)

@@ -152,6 +152,9 @@ lagSwitch(ThisHotKey) {
         altkey := InStr(A_ThisHotkey,"*!")=1
         getCurrent(false)
         if(version != "") {
+            while(GetKeyState(key,"P")) {
+                Sleep 10
+            }
             blockInternetAccess()
             time := A_Now
             SetTimer(unblockInternetAccess,ltime*1000+100)
@@ -216,6 +219,15 @@ getkey(key) {
 
 freezetoggle(ThisHotkey) {
     freeze(,true,translatekeybind(A_ThisHotkey))
+    try {
+        user := GetProcessUser(WinGetPID("Roblox"))
+    } catch {
+        user := A_UserName
+    }
+    if(version!=""&&user!=A_UserName) {
+        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
+        return
+    }
 }
 
 global smashKeys := "1", smashTimes := 1700, leap := 100
@@ -251,13 +263,12 @@ ckeySmasher() {
 global per := 0.15, keys := "wa", keysd := "{space down}{w down}{a down}", keysu := "{space up}{w up}{a up}", x := [A_ScreenWidth/2+A_ScreenWidth*per,A_ScreenWidth/2-A_ScreenWidth*per], y := A_ScreenHeight/2
 
 speedm(ThisHotkey) { ;speed
-    global per, keysd, keysu, x, y
     key := getkey(A_ThisHotkey)
     SendEvent(keysd)
     while GetKeyState(key,"P")||A_Index=1 {
         loop 2 {
-            MouseMove(x[A_Index],y)
-            Sleep 1
+            MouseMove(x[A_Index],0)
+            Sleep 16
         }
     }
     SendEvent(keysu)
@@ -534,7 +545,7 @@ serverHop() {
         user := A_UserName ,placeID := "", jobID := "", sList := []
     }
     if(version!=""&&user!=A_UserName) {
-        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
+        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
         return
     }
     if(placeID!=""&&jobID!=""&&sList!=[]) {
@@ -559,7 +570,7 @@ rejoin() {
         user := A_UserName ,placeID := "", jobID := "", sList := []
     }
     if(version!=""&&user!=A_UserName) {
-        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP/REJOIN TO WORK!",title)
+        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
         return
     }
     if(placeID!=""&&jobID!="") {

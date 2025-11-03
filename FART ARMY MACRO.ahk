@@ -318,7 +318,7 @@ speed() { ;customize speed
             while(!WinExist("Roblox")) {
                 Sleep 100
             }
-            Sleep 1000
+            Sleep 2000
             while(WinExist("Pick an app")&&A_Index<30) {  ;I FUCKING HATE THIS POP UP!
                 WinClose("Pick an app")
                 Sleep 25

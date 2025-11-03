@@ -309,14 +309,25 @@ speed() { ;customize speed
                 global x := Integer(Abs(InputBox2("how many pixels will the cursor move?",x)))
                 return
             }
-            ToolTip("JOINING CALIBRATION GAME!",,,7)
-            while(placeID!="126647205032462") {
+            ToolTip("JOINING CALIBRATION GAME!`n`nYOU CAN HOLD E TO EXIT AUTO SETUP IF YOU ARE PERM STUCK!",A_ScreenWidth/2,A_ScreenHeight/2+50,7)
+            e := false
+            while(placeID!="126647205032462"&&!e) {
                 Sleep 100
+                if(GetKeyState("e","P")) {
+                    e := true
+                }
                 getCurrent()
             }
             Sleep 1000
-            while(!WinExist("Roblox")) {
+            while(!WinExist("Roblox")&&!e) {
                 Sleep 100
+                if(GetKeyState("e","P")) {
+                    e := true
+                }
+            }
+            if(e) {
+                ToolTip(,,,7)
+                return
             }
             Sleep 2000
             while(WinExist("Pick an app")&&A_Index<30) {  ;I FUCKING HATE THIS POP UP!
@@ -339,7 +350,7 @@ speed() { ;customize speed
             Sleep 500
             ToolTip(,,,7)
             WinActivate("Roblox")
-            global x := speedCalibrate()
+            global x := speedCalibrate(x)
             SendEvent("{Escape}")
             Sleep 50
             SendEvent("l")
@@ -413,7 +424,7 @@ getDistance(bool) { ;uses binary but its still slow, im guessing pixelgetcolor i
 global cMin := 10 ;perfect 180 is unstable for speed
 global cMax := 25
 
-speedCalibrate() {
+speedCalibrate(originalx) {
     y := A_ScreenHeight/2
     speed := 50
     Sleep 500
@@ -485,10 +496,15 @@ speedCalibrate() {
         }
         Sleep speed
     }
-    ToolTip("PIXEL DISTANCE: " d,,,6)
-    Sleep 1000
-    ToolTip(,,,6)
-    return d<0? p-1:p
+    if(Abs(d)>=cMin&&Abs(d)<=cMax) {
+        ToolTip("PIXEL DISTANCE: " d,,,6)
+        Sleep 1000
+        ToolTip(,,,6)
+        return d<0? p-1:p
+    } else {
+        ToolTip(,,,6)
+        return originalx
+    }
 }
 
 global tmin := 1, tmax := 10, tmode := true, tmash := "qe", tindex := -1, delay := 25 ;tmode false = semi auto, tmode true = full auto

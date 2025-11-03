@@ -1,11 +1,13 @@
 #Requires AutoHotkey v2.0.18+
 #SingleInstance Force
-ProcessSetPriority "H"
+ProcessSetPriority("R")
 SetKeyDelay(-1)
 SetMouseDelay(-1)
 CoordMode("ToolTip","Screen")
 SetTitleMatchMode(3)
 SendLevel(1)
+SetDefaultMouseSpeed(0)
+SendMode("Event")
 
 multiStr(str,multi) {
     return StrReplace(Format("{:0" multi "}",0),0,str)
@@ -35,7 +37,7 @@ InputBox2(prompt,default) {
     return prompt=""? default:InputBox(prompt,title,,default).Value
 }
 
-global vars := ["smashKeys","smashTimes","per","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey","ltime"]
+global vars := ["smashKeys","smashTimes","x","fps","sdir","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey","ltime"]
 global space := Chr(3)
 saveSettings() {
     global vars, space
@@ -79,7 +81,6 @@ loadSettings() {
         keysd .= "{" index " down}"
         keysu .= "{" index " up}"
     }
-    global x := [A_ScreenWidth/2+A_ScreenWidth*per,A_ScreenWidth/2-A_ScreenWidth*per] ;x array does not get saved in case A_ScreenWidth changes
     loop KeyBinds.Length {
         keymap[KeyBinds[A_Index]] := true
         try { ;yeah the user will prob change the keybind if they notice its not working
@@ -87,8 +88,6 @@ loadSettings() {
         }
     }
 }
-global allowedf := Map("settings",true,"FARTlog.ahk",true,"FART ARMY MACRO.ahk",true,"info",true)
-allowedf.Default := false
 
 checkEnviroment() {
     checkReader()
@@ -98,12 +97,6 @@ checkEnviroment() {
     if(A_ScriptName != "FART ARMY MACRO.ahk") {
         MsgBox("THIS FILE MUST BE NAMED FART ARMY MACRO",title)
         ExitApp()
-    }
-    loop Files A_ScriptDir "\*", "R" {
-        if(A_Index > 4 || !allowedf[A_LoopFileName]) {
-            MsgBox("THIS MACRO MUST BE PUT IN AN EMPTY NEW FOLDER!",title)
-            ExitApp()
-        }
     }
     if(!FileExist("files\FARTlog.ahk")) {
         MsgBox("YOU ARE MISSING FILES THAT ARE REQUIRED FOR THIS MACRO TO WORK!",title)
@@ -260,16 +253,31 @@ ckeySmasher() {
     }
 }
 
-global per := 0.15, keys := "wa", keysd := "{space down}{w down}{a down}", keysu := "{space up}{w up}{a up}", x := [A_ScreenWidth/2+A_ScreenWidth*per,A_ScreenWidth/2-A_ScreenWidth*per], y := A_ScreenHeight/2
+global keys := "w", keysd := "{space down}{w down}{a down}", keysu := "{space up}{w up}{a up}", x := 95, y := A_ScreenHeight/2, sdir := true, fps := 60
+
+SleepEx(Milliseconds) { ;THIS FUNCTION IS NOT WRITTEN BY ME! credits go to https://www.reddit.com/r/AutoHotkey/comments/11g0san/need_help_with_my_dllcall/
+    static tps := _tps(), start := 0, current := 0
+    DllCall("QueryPerformanceCounter", "Int64*", &start)
+    end := start + (Milliseconds * tps)
+    loop {
+        DllCall("QueryPerformanceCounter", "Int64*", &current)
+    } until (current >= end)
+    _tps() {
+        freq := 0
+        DllCall("QueryPerformanceFrequency", "Int64*", &freq)
+        return freq //= 1000
+    }
+}
 
 speedm(ThisHotkey) { ;speed
     key := getkey(A_ThisHotkey)
     SendEvent(keysd)
+    s := [sdir*x,!sdir*x], t := 1000/fps
     while GetKeyState(key,"P")||A_Index=1 {
-        loop 2 {
-            MouseMove(x[A_Index],y)
-            Sleep 16
-        }
+       loop 2 {
+            MouseMove(s[A_Index],y)
+            SleepEx(t)
+       }
     }
     SendEvent(keysu)
 }
@@ -278,7 +286,7 @@ speed() { ;customize speed
     global keys := StrLower(InputBox2("what wasd keys will the speed macro hold down?", keys))
     global keysd := "{space down}"
     global keysu := "{space up}"
-    global title
+    global title, placeID
     dupecheck := Map()
     dupecheck.Default := false
     str := ""
@@ -292,13 +300,195 @@ speed() { ;customize speed
         dupecheck[index] := true
     }
     global keys := str
+    global sdir := MsgBox("press yes to keep current speed direction`n`npress no to reverse the direction" ,title,"YesNo")="Yes"? sdir:!sdir
     try {
-        global per := Integer(InputBox2("how much percentage of your screenwidth will the cursor move away from the center of the screen?",Round(per*100)))/100
-        per := Abs(per)+(per=0)*0.15
-        global x := [A_ScreenWidth/2+A_ScreenWidth*per,A_ScreenWidth/2-A_ScreenWidth*per]
-    } catch {
+        global fps := Integer(Abs(InputBox2("what is your fps?`n`nyou can press shift+F5 to view your fps in roblox`nyou can also customize max fps in roblox",fps)))
+        if((MsgBox("do you want to auto find right amount of pixels for speed?",title,"YesNo")="Yes")? MsgBox("are you sure you want to auto find the right amount of pixels?`n`nIT WILL MAKE YOU LEAVE AND JOIN A CALIBRATION GAME!",,"YesNo")="Yes":false) {
+            if(!join("126647205032462")) {
+                MsgBox("MACRO FAILED TO JOIN CALIBRATION GAME!")
+                global x := Integer(Abs(InputBox2("how many pixels will the cursor move?",x)))
+                return
+            }
+            ToolTip("JOINING CALIBRATION GAME!",,,7)
+            while(placeID!="126647205032462") {
+                Sleep 100
+                getCurrent()
+            }
+            Sleep 1000
+            while(!WinExist("Roblox")) {
+                Sleep 100
+            }
+            Sleep 1000
+            while(WinExist("Pick an app")&&A_Index<30) {  ;I FUCKING HATE THIS POP UP!
+                WinClose("Pick an app")
+                Sleep 25
+            }
+            ToolTip(,,,7)
+            done := 0
+            ToolTip("PRESS ENTER 3 TIMES TO START SPEED CALIBRATION ONCE YOU HAVE FULLY LOADED INTO THE GAME!",A_ScreenWidth/2,A_ScreenHeight/2+50,7)
+            while done<3 {
+                if(GetKeyState("Enter","P")) {
+                    done++
+                    ToolTip("PRESS ENTER 3 TIMES TO START SPEED CALIBRATION ONCE YOU HAVE FULLY LOADED INTO THE GAME!`n`n" done "/3",A_ScreenWidth/2,A_ScreenHeight/2+50,7)
+                    while(GetKeyState("Enter","P")) {
+                        Sleep 10
+                    }
+                }
+                Sleep 10
+            }
+            Sleep 500
+            ToolTip(,,,7)
+            WinActivate("Roblox")
+            global x := speedCalibrate()
+            SendEvent("{Escape}")
+            Sleep 50
+            SendEvent("l")
+            Sleep 50
+            SendEvent("{Enter}")
+            Sleep 50
+        } else {
+            global x := Integer(Abs(InputBox2("how many pixels will the cursor move?",x)))
+        }
+    } catch as err {
         MsgBox("you were supposed to type a number",title)
     }
+}
+
+blackOrWhite(x:=0,y:=0,bool:=false) {
+    if(!bool) {
+        MouseGetPos(&x,&y)
+        y -= 10
+    }
+    color := SubStr(PixelGetColor(x,y),3)
+    str := ""
+    rgb := []
+    Wbool := true
+    Bbool := true
+    loop StrLen(color) {
+        str .= SubStr(color,A_Index,1)
+        if(Mod(A_Index,2)=0) {
+            rgb.Push(Number("0X" str))
+            str := ""
+            Wbool *= rgb[rgb.Length] >= 215
+            Bbool *= rgb[rgb.Length] <= 40
+        }
+    }
+    return [Bbool,Wbool]
+}
+
+edges() {
+    MouseGetPos(&x,&y)
+    y -= 10
+    b := blackOrWhite(10,y,true)
+    w := blackOrWhite(A_ScreenWidth-10,y,true)
+    ;MsgBox(b[1] " " b[2] "`n" w[1] " " w[2])
+    return (b[1]=1&&b[2]=0&&w[1]=0&&w[2]=1)||(b[1]=0&&b[2]=0&&w[1]=0&&w[2]=1)||(b[1]=1&&b[2]=0&&w[1]=0&&w[2]=0) ;horrific code
+}
+
+getDistance(bool) { ;uses binary but its still slow, im guessing pixelgetcolor is a slow function. If not then that means my blackOrWhite function is slow
+    MouseGetPos(&x,&y)
+    y -= 10
+    min := 10
+    max := A_ScreenWidth-10
+    if(bool) {
+        max := x
+    } else {
+        min := x
+    }
+    current := Round((max+min)/2)
+    while max-min>1 {
+        r := blackOrWhite(current,y,true)
+        if(r[2]&&!r[1]) {
+            max := current
+            current := Floor(current-(max-min)/2)
+        } else {
+            min := current
+            current := Floor(current+(max-min)/2)
+        }
+    }
+    return x-min
+}
+
+
+global cMin := 10 ;perfect 180 is unstable for speed
+global cMax := 30
+
+speedCalibrate() {
+    y := A_ScreenHeight/2
+    speed := 50
+    Sleep 500
+    SendEvent("r") ;just in case the user had paused
+    Sleep 100
+    SendEvent("{Enter}") ;respawn time is 0 in calibration game
+    Sleep 500
+    MouseMove(0,y)
+    Sleep speed
+    Send("r")
+    Sleep speed
+    lx := 0
+    lb := 0
+    skip := 0
+    skip2 := 0
+    waswhite := false
+    wasblack := false
+    finished := false
+    toblack := 0
+    d := 1E6
+    while true {
+        p := A_Index
+        MouseMove(A_Index,y)
+        Sleep speed
+        r := blackOrWhite()
+        r2 := true
+        if(!(r[1]=0&&r[2]=0)) {
+            r2 := edges()
+        }
+        if(r[1]&&r2) {
+            if(A_Index-lx-1 > 1 && waswhite && !finished) {
+                skip := A_Index-lx-1+skip2
+                finished := true
+                MouseMove(A_Index+skip2,y)
+                A_Index += skip2
+                Sleep speed
+            }
+            d := getDistance(false)
+            ToolTip(A_Index " BLACK`nDISTANCE: " d "`nSKIP: " skip,,,6)
+            if(!wasblack) {
+                toblack := A_Index
+                lb := A_Index
+                wasblack := true
+            }
+            if(Abs(d)>=cMin&&Abs(d)<=cMax) {
+                break
+            }
+        } else if(r[2]&&r2) {
+            d := getDistance(true)
+            ToolTip(A_Index " WHITE`nDISTANCE: " d "`nSKIP: " skip,,,6)
+            if(!waswhite&&!finished) {
+                skip2 := A_Index-lb-1
+                lx := A_Index
+                MouseMove(A_Index+toblack*2,y)
+                A_Index += toblack*2
+                Sleep speed
+            }
+            if(Abs(d)>=cMin&&Abs(d)<=cMax) {
+                break
+            }
+            if(finished) {
+                MouseMove(A_Index+skip,y)
+                A_Index += skip
+                Sleep speed
+            }
+            waswhite := true
+        } else {
+            ToolTip(A_Index " NO DATA`nSKIP: " skip,,,6)
+        }
+        Sleep speed
+    }
+    ToolTip("PIXEL DISTANCE: " d,,,6)
+    Sleep 1000
+    ToolTip(,,,6)
+    return d<0? p-1:p
 }
 
 global tmin := 1, tmax := 10, tmode := true, tmash := "qe", tindex := -1, delay := 25 ;tmode false = semi auto, tmode true = full auto
@@ -356,7 +546,7 @@ autoclick(ThisHotKey) { ;autoclicker
         loop mt[1] {
             Click
         }
-        Sleep mt[2]
+        SleepEx(mt[2])
     }
     ToolTip(,,,3)
     while(!cmode&&GetKeyState(key,"P")) {
@@ -544,21 +734,23 @@ serverHop() {
     } catch {
         user := A_UserName ,placeID := "", jobID := "", sList := []
     }
-    if(version!=""&&user!=A_UserName) {
+    if(user!=A_UserName) {
         MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
-        return
+        return false
     }
-    if(placeID!=""&&jobID!=""&&sList!=[]) {
+    if(placeID!=""&&jobID!=""&&sList!=[]&&WinExist("Roblox")&&version!="") {
         closeRoblox()
         Run joinLink(placeID,sList[sList.Length])
         jobID := sList[sList.Length]
         sList.Pop()
         if(sList.Length = 0) {
             sList := getServers(placeID,jobID)
-        } 
+        }
+        return true
     } else {
         MsgBox("YOU MUST JOIN A GAME FIRST FOR THIS TO WORK!",title)
     }
+    return false
 }
 
 rejoin() {
@@ -569,16 +761,36 @@ rejoin() {
     } catch {
         user := A_UserName ,placeID := "", jobID := "", sList := []
     }
-    if(version!=""&&user!=A_UserName) {
+    if(user!=A_UserName) {
         MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
-        return
+        return false
     }
-    if(placeID!=""&&jobID!="") {
+    if(placeID!=""&&jobID!=""&&WinExist("Roblox")&&version!="") {
         closeRoblox()
         Run joinLink(placeID,jobID)
+        return true
     } else {
         MsgBox("YOU MUST JOIN A GAME FIRST FOR THIS TO WORK!",title)
     }
+    return false
+}
+
+join(place) {
+    global title
+    if(!WinExist("Roblox")) {
+        MsgBox("YOU MUST START ROBLOX FOR THIS TO WORK!",title)
+        return false
+    }
+    try {
+        user := GetProcessUser(WinGetPID("Roblox"))
+    }
+    if(user!=A_UserName) {
+        MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
+        return false
+    }
+    closeRoblox()
+    Run "roblox://experiences/start?placeId=" place
+    return true
 }
 
 global cfunc := [toolbar,speed,autoc,ckeySmasher,cautochat,clagSwitch,CustomizeKeybinds,rejoin,serverHop]
@@ -689,11 +901,11 @@ if(!FileExist("files\settings") || FileRead("files\settings")="") {
 loadSettings()
 
 if(!restart) {
-    MsgBox("THIS MACRO IS MADE FOR THESE ROBLOX SETTINGS:`n`ncamera sensitivity: 1`nFPS: 60`n`nIF YOU DONT USE THESE SETTINGS THEN THIS MACRO WONT WORK AS EXPECTED!",title)
+    MsgBox("THIS MACRO IS MADE FOR THESE ROBLOX SETTINGS:`n`ncamera mode: CLASSIC`n`nIF YOU DONT USE THESE SETTINGS THEN THIS MACRO WONT WORK AS EXPECTED!",title)
 } else {
     restart := false
     saveSettings()
 }
-while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nSTART: " tmin ", END: " tmax ", KEYS: `"" tmash "`", MODE: " (tmode? "FULL AUTO, DELAY: " delay "ms":"SEMI AUTO") "`n`nspeed macro: " translatekeybind(KeyBinds[2]) "`nWASD: `"" keys "`", PERCENTAGE: " Round(per*100) "%`n`nautoclicker: " translatekeybind(KeyBinds[3]) "`nCPS: " Round(mt[1]*(1000/mt[2])) ", MODE: " (cmode? "HOLD":"TOGGLE") "`n`nkey smasher macro: " translatekeybind(KeyBinds[4]) "`nKEYS: `"" smashKeys "`", TIMES: " smashTimes "`n`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`n`nauto chat: " translatekeybind(KeyBinds[6]) "`nMESSAGE: `"" msg "`", CHATKEY: `"" chatKey "`"`n`nlag switch: " translatekeybind(KeyBinds[7]) "`nMAX TIME: " ltime " seconds`n`n`npress OK to customize the macros or for more tools`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():(ExitApp())) {
+while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nSTART: " tmin ", END: " tmax ", KEYS: `"" tmash "`", MODE: " (tmode? "FULL AUTO, DELAY: " delay "ms":"SEMI AUTO") "`n`nspeed macro: " translatekeybind(KeyBinds[2]) "`nWASD: `"" keys "`",FPS: " fps ", PIXELS: " x ", DIRECTION: " (sdir?"NORMAL":"REVERSE") "`n`nautoclicker: " translatekeybind(KeyBinds[3]) "`nCPS: " Round(mt[1]*(1000/mt[2])) ", MODE: " (cmode? "HOLD":"TOGGLE") "`n`nkey smasher macro: " translatekeybind(KeyBinds[4]) "`nKEYS: `"" smashKeys "`", TIMES: " smashTimes "`n`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`n`nauto chat: " translatekeybind(KeyBinds[6]) "`nMESSAGE: `"" msg "`", CHATKEY: `"" chatKey "`"`n`nlag switch: " translatekeybind(KeyBinds[7]) "`nMAX TIME: " ltime " seconds`n`n`npress OK to customize the macros or for more tools`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():(ExitApp())) {
     checkEnviroment()
 }

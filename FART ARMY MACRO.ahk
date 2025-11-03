@@ -434,7 +434,7 @@ speedCalibrate() {
     finished := false
     toblack := 0
     d := 1E6
-    while true {
+    while (true&&!GetKeyState("e","P")) {
         p := A_Index
         MouseMove(A_Index,y)
         Sleep speed
@@ -452,7 +452,7 @@ speedCalibrate() {
                 Sleep speed
             }
             d := getDistance(false)
-            ToolTip(A_Index " BLACK`nDISTANCE: " d "`nSKIP: " skip,,,6)
+            ToolTip(A_Index " BLACK`nDISTANCE: " d "`nSKIP: " skip "`n`nIF YOU ARE PERM STUCK YOU CAN HOLD E TO EXIT AUTO SETUP!",,,6)
             if(!wasblack) {
                 toblack := A_Index
                 lb := A_Index
@@ -463,7 +463,7 @@ speedCalibrate() {
             }
         } else if(r[2]&&r2) {
             d := getDistance(true)
-            ToolTip(A_Index " WHITE`nDISTANCE: " d "`nSKIP: " skip,,,6)
+            ToolTip(A_Index " WHITE`nDISTANCE: " d "`nSKIP: " skip "`n`nIF YOU ARE PERM STUCK YOU CAN HOLD E TO EXIT AUTO SETUP!",,,6)
             if(!waswhite&&!finished) {
                 skip2 := A_Index-lb-1
                 lx := A_Index
@@ -481,7 +481,7 @@ speedCalibrate() {
             }
             waswhite := true
         } else {
-            ToolTip(A_Index " NO DATA`nSKIP: " skip,,,6)
+            ToolTip(A_Index " NO DATA`nSKIP: " skip "`n`nIF YOU ARE PERM STUCK YOU CAN HOLD E TO EXIT AUTO SETUP!",,,6)
         }
         Sleep speed
     }

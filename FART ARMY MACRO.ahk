@@ -411,7 +411,7 @@ getDistance(bool) { ;uses binary but its still slow, im guessing pixelgetcolor i
 
 
 global cMin := 10 ;perfect 180 is unstable for speed
-global cMax := 30
+global cMax := 25
 
 speedCalibrate() {
     y := A_ScreenHeight/2

@@ -1,6 +1,8 @@
 # LPI-FART-ARMY-MACRO
 standard LPI macro for all fart army members!
 
+THIS MACRO ONLY WORKS ON NORMAL ROBLOX! THIS MEANS NO BLOXSTRAP OR ANYTHING LIKE THAT!
+
 this macro is written in AutoHotKey v2
 
 you need autohotkey v2 to run this macro

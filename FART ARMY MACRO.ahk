@@ -302,7 +302,7 @@ speed() { ;customize speed
     global keys := str
     global sdir := MsgBox("press yes to keep current speed direction`n`npress no to reverse the direction" ,title,"YesNo")="Yes"? sdir:!sdir
     try {
-        global fps := Integer(Abs(InputBox2("what is your fps?`n`nyou can press shift+F5 to view your fps in roblox`nyou can also customize max fps in roblox",fps)))
+        global fps := Integer(Abs(InputBox2("what is your roblox fps?`n`nyou can press shift+F5 to view your fps in roblox`nyou can also customize max fps in roblox`nits best to use a stable fps`nstable meaning that your fps remains mostly the same",fps)))
         if((MsgBox("do you want to auto find right amount of pixels for speed?",title,"YesNo")="Yes")? MsgBox("are you sure you want to auto find the right amount of pixels?`n`nIT WILL MAKE YOU LEAVE AND JOIN A CALIBRATION GAME!",,"YesNo")="Yes":false) {
             if(!join("126647205032462")) {
                 MsgBox("MACRO FAILED TO JOIN CALIBRATION GAME!")

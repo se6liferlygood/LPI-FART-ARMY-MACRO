@@ -89,17 +89,31 @@ loadSettings() {
     }
 }
 
+global allowedf := Map("files",true,"FART ARMY MACRO.ahk",true)
+allowedf.Default := false
+
 checkEnviroment() {
-    checkReader()
-    if(FileExist("README.md")) {
-        FileDelete("README.md")
-    }
-    if(A_ScriptName != "FART ARMY MACRO.ahk") {
-        MsgBox("THIS FILE MUST BE NAMED FART ARMY MACRO",title)
-        ExitApp()
-    }
-    if(!FileExist("files\FARTlog.ahk")) {
-        MsgBox("YOU ARE MISSING FILES THAT ARE REQUIRED FOR THIS MACRO TO WORK!",title)
+    try {
+        checkReader()
+        if(FileExist("README.md")) {
+            FileDelete("README.md")
+        }
+        if(A_ScriptName != "FART ARMY MACRO.ahk") {
+            MsgBox("THIS FILE MUST BE NAMED FART ARMY MACRO",title)
+            ExitApp()
+        }
+        loop Files A_ScriptDir "\*", "D" {
+            if(A_Index > 2 || !allowedf[A_LoopFileName]) {
+                MsgBox("YOU HAVE PROBABLY DOWNLOADED THIS MACRO INCORRECTLY!`n`nYOU ARE SUPPOSED TO DOWNLOAD IT THROUGH THE DOWNLOAD LINK IN README THEN EXTRACT THE ZIP FILE!",title)
+                ExitApp()
+            }
+        }
+        if(!FileExist("files\FARTlog.ahk")) {
+            MsgBox("YOU HAVE PROBABLY DOWNLOADED THIS MACRO INCORRECTLY!`n`nYOU ARE SUPPOSED TO DOWNLOAD IT THROUGH THE DOWNLOAD LINK IN README THEN EXTRACT THE ZIP FILE!",title)
+            ExitApp()
+        }
+    } catch {
+        MsgBox("YOU HAVE PROBABLY DOWNLOADED THIS MACRO INCORRECTLY!`n`nYOU ARE SUPPOSED TO DOWNLOAD IT THROUGH THE DOWNLOAD LINK IN README THEN EXTRACT THE ZIP FILE!",title)
         ExitApp()
     }
 }

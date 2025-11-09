@@ -96,20 +96,6 @@ try {
     ExitApp() ;yeah the user wont be able to serverhop or rejoin or lag switch if this is the case
 }
 
-SleepEx(Milliseconds) { ;THIS FUNCTION IS NOT WRITTEN BY ME! credits go to https://www.reddit.com/r/AutoHotkey/comments/11g0san/need_help_with_my_dllcall/
-    static tps := _tps(), start := 0, current := 0
-    DllCall("QueryPerformanceCounter", "Int64*", &start)
-    end := start + (Milliseconds * tps)
-    loop {
-        DllCall("QueryPerformanceCounter", "Int64*", &current)
-    } until (current >= end)
-    _tps() {
-        freq := 0
-        DllCall("QueryPerformanceFrequency", "Int64*", &freq)
-        return freq //= 1000
-    }
-}
-
 while(true) {
     redo:
     while(logPath = "") {

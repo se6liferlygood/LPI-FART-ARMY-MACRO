@@ -96,6 +96,20 @@ try {
     ExitApp() ;yeah the user wont be able to serverhop or rejoin or lag switch if this is the case
 }
 
+SleepEx(Milliseconds) { ;THIS FUNCTION IS NOT WRITTEN BY ME! credits go to https://www.reddit.com/r/AutoHotkey/comments/11g0san/need_help_with_my_dllcall/
+    static tps := _tps(), start := 0, current := 0
+    DllCall("QueryPerformanceCounter", "Int64*", &start)
+    end := start + (Milliseconds * tps)
+    loop {
+        DllCall("QueryPerformanceCounter", "Int64*", &current)
+    } until (current >= end)
+    _tps() {
+        freq := 0
+        DllCall("QueryPerformanceFrequency", "Int64*", &freq)
+        return freq //= 1000
+    }
+}
+
 while(true) {
     redo:
     while(logPath = "") {
@@ -130,6 +144,20 @@ while(true) {
             version := SubStr(rline,1,InStr(rline,"RobloxPlayerInstaller.exe")-1)
             version := StrReplace(SubStr(version,InStr(version,"C:\")),"\RobloxPlayerInstaller.exe")
             update := true
+        } else if(placeID="126647205032462"&&InStr(rline,"ANGLE",1)&&FileExist("speedY")) {
+            str := SubStr(rline,InStr(rline,"ANGLE(")+6)
+            str := SubStr(str,1,InStr(str,")")-1)
+            ;try {
+                angle := Number(str)
+                redo2:
+                try {
+                    FileAppend(angle " ","speedY")
+                } catch {
+                    Sleep 50
+                    goto redo2
+                }
+                ;ToolTip("" angle,A_ScreenWidth/2,A_ScreenHeight/2+20)
+            ;}
         }
         while(lcurrent >= lsize) {
             lcurrent := lsize
@@ -149,7 +177,11 @@ while(true) {
                 seeking := true
                 break
             }
-            Sleep 100
+            if(placeID="126647205032462") {
+                Sleep 10
+            } else {
+                Sleep 250
+            }
         }
         if(seeking) {
             break

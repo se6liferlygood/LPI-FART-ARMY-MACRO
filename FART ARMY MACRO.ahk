@@ -37,6 +37,20 @@ InputBox2(prompt,default) {
     return prompt=""? default:InputBox(prompt,title,,default).Value
 }
 
+SleepEx(Milliseconds) { ;THIS FUNCTION IS NOT WRITTEN BY ME! credits go to https://www.reddit.com/r/AutoHotkey/comments/11g0san/need_help_with_my_dllcall/
+    static tps := _tps(), start := 0, current := 0
+    DllCall("QueryPerformanceCounter", "Int64*", &start)
+    end := start + (Milliseconds * tps)
+    loop {
+        DllCall("QueryPerformanceCounter", "Int64*", &current)
+    } until (current >= end)
+    _tps() {
+        freq := 0
+        DllCall("QueryPerformanceFrequency", "Int64*", &freq)
+        return freq //= 1000
+    }
+}
+
 global vars := ["smashKeys","smashTimes","x","fps","sdir","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey","ltime"]
 global space := Chr(3)
 saveSettings() {
@@ -76,7 +90,7 @@ loadSettings() {
         }
     }
     global keysd := "{space down}", keysu := "{space up}"
-    loop StrLen(keys) {
+    loop Strlen(keys) {
         index := SubStr(keys,A_Index,1)
         keysd .= "{" index " down}"
         keysu .= "{" index " up}"
@@ -269,20 +283,6 @@ ckeySmasher() {
 
 global keys := "w", keysd := "{space down}{w down}{a down}", keysu := "{space up}{w up}{a up}", x := 95, y := A_ScreenHeight/2, sdir := true, fps := 60
 
-SleepEx(Milliseconds) { ;THIS FUNCTION IS NOT WRITTEN BY ME! credits go to https://www.reddit.com/r/AutoHotkey/comments/11g0san/need_help_with_my_dllcall/
-    static tps := _tps(), start := 0, current := 0
-    DllCall("QueryPerformanceCounter", "Int64*", &start)
-    end := start + (Milliseconds * tps)
-    loop {
-        DllCall("QueryPerformanceCounter", "Int64*", &current)
-    } until (current >= end)
-    _tps() {
-        freq := 0
-        DllCall("QueryPerformanceFrequency", "Int64*", &freq)
-        return freq //= 1000
-    }
-}
-
 speedm(ThisHotkey) { ;speed
     key := getkey(A_ThisHotkey)
     SendEvent(keysd)
@@ -320,7 +320,7 @@ speed() { ;customize speed
         if((MsgBox("do you want to auto find right amount of pixels for speed?",title,"YesNo")="Yes")? MsgBox("are you sure you want to auto find the right amount of pixels?`n`nIT WILL MAKE YOU LEAVE AND JOIN A CALIBRATION GAME!",,"YesNo")="Yes":false) {
             if(!join("126647205032462")) {
                 MsgBox("MACRO FAILED TO JOIN CALIBRATION GAME!")
-                global x := Integer(Abs(InputBox2("how many pixels will the cursor move?",x)))
+                global x := Floor(Abs(InputBox2("how many pixels will the cursor move?",x)))
                 return
             }
             ToolTip("JOINING CALIBRATION GAME!`n`nYOU CAN HOLD E TO EXIT AUTO SETUP IF YOU ARE PERM STUCK!",A_ScreenWidth/2,A_ScreenHeight/2+50,7)
@@ -372,76 +372,18 @@ speed() { ;customize speed
             SendEvent("{Enter}")
             Sleep 50
         } else {
-            global x := Integer(Abs(InputBox2("how many pixels will the cursor move?",x)))
+            global x := Floor(Abs(InputBox2("how many pixels will the cursor move?",x)))
         }
     } catch as err {
         MsgBox("you were supposed to type a number",title)
+        MsgBox(err.Message)
     }
 }
-
-blackOrWhite(x:=0,y:=0,bool:=false) {
-    if(!bool) {
-        MouseGetPos(&x,&y)
-        y -= 10
-    }
-    color := SubStr(PixelGetColor(x,y),3)
-    str := ""
-    rgb := []
-    Wbool := true
-    Bbool := true
-    loop StrLen(color) {
-        str .= SubStr(color,A_Index,1)
-        if(Mod(A_Index,2)=0) {
-            rgb.Push(Number("0X" str))
-            str := ""
-            Wbool *= rgb[rgb.Length] >= 215
-            Bbool *= rgb[rgb.Length] <= 40
-        }
-    }
-    return [Bbool,Wbool]
-}
-
-edges() {
-    MouseGetPos(&x,&y)
-    y -= 10
-    b := blackOrWhite(10,y,true)
-    w := blackOrWhite(A_ScreenWidth-10,y,true)
-    ;MsgBox(b[1] " " b[2] "`n" w[1] " " w[2])
-    return (b[1]=1&&b[2]=0&&w[1]=0&&w[2]=1)||(b[1]=0&&b[2]=0&&w[1]=0&&w[2]=1)||(b[1]=1&&b[2]=0&&w[1]=0&&w[2]=0) ;horrific code
-}
-
-getDistance(bool) { ;uses binary but its still slow, im guessing pixelgetcolor is a slow function. If not then that means my blackOrWhite function is slow
-    MouseGetPos(&x,&y)
-    y -= 10
-    min := 10
-    max := A_ScreenWidth-10
-    if(bool) {
-        max := x
-    } else {
-        min := x
-    }
-    current := Round((max+min)/2)
-    while max-min>1 {
-        r := blackOrWhite(current,y,true)
-        if(r[2]&&!r[1]) {
-            max := current
-            current := Floor(current-(max-min)/2)
-        } else {
-            min := current
-            current := Floor(current+(max-min)/2)
-        }
-    }
-    return x-min
-}
-
-
-global cMin := 10 ;perfect 180 is unstable for speed
-global cMax := 25
 
 speedCalibrate(originalx) {
     y := A_ScreenHeight/2
     speed := 50
-    Sleep 500
+    Sleep 100
     SendEvent("r") ;just in case the user had paused
     Sleep 100
     SendEvent("{Enter}") ;respawn time is 0 in calibration game
@@ -450,75 +392,70 @@ speedCalibrate(originalx) {
     Sleep speed
     Send("r")
     Sleep speed
-    lx := 0
-    lb := 0
-    skip := 0
-    skip2 := 0
-    waswhite := false
-    wasblack := false
-    finished := false
-    toblack := 0
-    d := 1E6
-    while (true&&!GetKeyState("e","P")) {
-        p := A_Index
-        MouseMove(A_Index,y)
-        Sleep speed
-        r := blackOrWhite()
-        r2 := true
-        if(!(r[1]=0&&r[2]=0)) {
-            r2 := edges()
-        }
-        if(r[1]&&r2) {
-            if(A_Index-lx-1 > 1 && waswhite && !finished) {
-                skip := A_Index-lx-1+skip2
-                finished := true
-                MouseMove(A_Index+skip2,y)
-                A_Index += skip2
-                Sleep speed
-            }
-            d := getDistance(false)
-            ToolTip(A_Index " BLACK`nDISTANCE: " d "`nSKIP: " skip "`n`nIF YOU ARE PERM STUCK YOU CAN HOLD E TO EXIT AUTO SETUP!",,,6)
-            if(!wasblack) {
-                toblack := A_Index
-                lb := A_Index
-                wasblack := true
-            }
-            if(Abs(d)>=cMin&&Abs(d)<=cMax) {
-                break
-            }
-        } else if(r[2]&&r2) {
-            d := getDistance(true)
-            ToolTip(A_Index " WHITE`nDISTANCE: " d "`nSKIP: " skip "`n`nIF YOU ARE PERM STUCK YOU CAN HOLD E TO EXIT AUTO SETUP!",,,6)
-            if(!waswhite&&!finished) {
-                skip2 := A_Index-lb-1
-                lx := A_Index
-                MouseMove(A_Index+toblack*2,y)
-                A_Index += toblack*2
-                Sleep speed
-            }
-            if(Abs(d)>=cMin&&Abs(d)<=cMax) {
-                break
-            }
-            if(finished) {
-                MouseMove(A_Index+skip,y)
-                A_Index += skip
-                Sleep speed
-            }
-            waswhite := true
-        } else {
-            ToolTip(A_Index " NO DATA`nSKIP: " skip "`n`nIF YOU ARE PERM STUCK YOU CAN HOLD E TO EXIT AUTO SETUP!",,,6)
-        }
-        Sleep speed
-    }
-    if(Abs(d)>=cMin&&Abs(d)<=cMax) {
-        ToolTip("PIXEL DISTANCE: " d,,,6)
-        Sleep 1000
-        ToolTip(,,,6)
-        return d<0? p-1:p
+    x := 0
+    nthRoot := 0
+    angle := 0
+    if(FileExist("files\speedY")) {
+        FileDelete("files\speedY")
+        FileAppend("","files\speedY")
     } else {
-        ToolTip(,,,6)
-        return originalx
+        FileAppend("","files\speedY")
     }
+    Sleep 100
+    loop 2 {
+        x++
+        ;ToolTip(x,A_ScreenWidth/2,A_ScreenHeight/2-50)
+        MouseMove(x,y)
+        Sleep 100
+        SendEvent("t")
+        Sleep 100
+    }
+    while(FileRead("files\speedY") = "") {
+        SleepEx(1)
+    }
+    Yarr := StrSplit(FileRead("files\speedY")," ")
+    a := -(Yarr[1]-Yarr[2])
+    b := Yarr[1]-a*(x-1)+180
+    lowest := [1E6,1E6]
+    FileDelete("files\speedY")
+    FileAppend("","files\speedY")
+    offset := 0
+    x2 := 0
+    while !GetKeyState("e","P")&&x2<=A_ScreenWidth {
+        redo3:
+        x2 := (180-b+360*nthRoot)/a-offset
+        if(Abs(x2-Round(x2))>0.2) {
+            nthRoot++
+            goto redo3
+        }
+        x2 := Round(x2)
+        ;ToolTip(x,A_ScreenWidth/2,A_ScreenHeight/2-50)
+        MouseMove(x2,y)
+        Sleep 100
+        SendEvent("t")
+        redo:
+        try {
+            while(FileRead("files\speedY") = "") {
+                SleepEx(1)
+            }
+            nthRoot++
+            angle := Number(FileRead("files\speedY"))
+        } catch {
+            Sleep 90
+            goto redo
+        }
+        ToolTip("HOLD E TO STOP CALIBRATING!`n`nADJUSTED BY OFFSET: " offset "`n`nLOWEST ANGLE FOUND:`nPIXEL: " lowest[1] "`nANGLE: " lowest[2] "`n`nCURRENTLY BEING TESTED:`nPIXEL: " x2 "`nANGLE: " angle,A_ScreenWidth/2,A_ScreenHeight/2+50)
+        if(Abs(angle) < Abs(lowest[2]) && Abs(angle) >= 0.1) { ;perfect 180 unstable for speed (I tested)
+            lowest := [x2,angle]
+        }
+        offset := ((180-b+angle+360*Round(x2/(360/a)))/a)-x2
+        FileDelete("files\speedY")
+        FileAppend("","files\speedY")
+    }
+    FileDelete("files\speedY")
+    Sleep 500
+    ToolTip()
+    return lowest[1]
 }
 
 global tmin := 1, tmax := 10, tmode := true, tmash := "qe", tindex := -1, delay := 25 ;tmode false = semi auto, tmode true = full auto

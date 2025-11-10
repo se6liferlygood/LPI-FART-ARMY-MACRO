@@ -51,98 +51,6 @@ SleepEx(Milliseconds) { ;THIS FUNCTION IS NOT WRITTEN BY ME! credits go to https
     }
 }
 
-class fartArmyScript {
-    waitflag := -1
-    index := 1
-    loopstack := []
-    rList := ""
-    syntax(Mstr) { ;TODO: COMPLETE SYNTAX CORRECTOR
-        
-    }
-    compile(Mstr) { ;TODO: COMPLETE COMPILER
-        Sarr := this.syntax(Mstr) ;syntax will return an array of strings then the compiler will turn that into instructions
-        Carr := []
-        depth := 0
-        loop Sarr.length {
-
-        }
-        return Carr
-    }
-    actions(func,input) { ;WF, W, L, END, K, T, H, R, M, MD, MC, C, {, V, F, FW, i (inbuilt macros), TODO: dont use switch! use a bunch of functions and then put them in compiled array then call them from execute!
-        if(func!="W"&&this.waitflag>0) {
-            SleepEx(this.waitflag)
-        }
-        switch(func) {
-            case "WF": ;control
-                this.waitflag := input[1]
-            case "W":
-                if(input[1]>0) {
-                    SleepEx(input[1])
-                }
-            case "L":
-                this.loopstack.Push([this.index+1,input[1],input[2]]) ;input[2] will be where END is located
-            case "END":
-                this.loopstack[this.loopstack.Length][2]--
-                if(this.loopstack[this.loopstack.Length][2]<=0) {
-                    this.loopstack.Pop()
-                } else {
-                    this.index := this.loopstack[this.loopstack.Length][1]
-                }
-            case "K": ;input
-                SendEvent("{RAW}" input[1])
-            case "T":
-                SendEvent("{RAW}" input[1])
-            case "H":
-                SendEvent("{" input[1] " down}")
-                if(InStr(this.rList,input[1])=0) {
-                    this.rList .= input[1]
-                }
-            case "R":
-                SendEvent("{" input[1] " up}")
-                this.rList := StrReplace(this.rList,input[1],"")
-            case "M":
-                MouseMove(input[1]+1,input[2]+1)
-                MouseMove(input[1],input[2])
-            case "MD":
-                MouseClickDrag(input[1],input[2],input[3],input[4],input[5],0)
-            case "MC":
-                MouseMove(input[2]+1,input[3]+1)
-                Click(input[1],input[2],input[3])
-                loop input[4]-1 {
-                    Click(input[1])
-                }
-            case "C":
-                loop input[2] {
-                    Click(input[1])
-                }
-            case "{":
-                SendEvent(input[1])
-            case "V": ;variable
-            case "F": ;files
-                Run "macro/custom/" input[1]
-            case "FW":
-                RunWait "macro/custom/" input[1]
-            case "i": ;inbuilt macros
-            default: ;logic
-        }
-    }
-    execute(Marr) {
-        this.waitflag := -1
-        this.index := 1
-        this.loopstack := []
-        this.rList := ""
-        fartLoop:
-            this.actions(Marr[this.index][1],Marr[this.index][2])
-            this.index++
-        if(this.index<=Marr.length) {
-            goto fartLoop
-        }
-        loop StrLen(this.rList) {
-            SendEvent("{" SubStr(this.rList,A_Index,1) " up}")
-        }
-    }
-}
-
 global vars := ["smashKeys","smashTimes","x","fps","sdir","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey","ltime"]
 global space := Chr(3)
 saveSettings() {
@@ -963,3 +871,4 @@ if(!restart) {
 while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nSTART: " tmin ", END: " tmax ", KEYS: `"" tmash "`", MODE: " (tmode? "FULL AUTO, DELAY: " delay "ms":"SEMI AUTO") "`n`nspeed macro: " translatekeybind(KeyBinds[2]) "`nWASD: `"" keys "`",FPS: " fps ", PIXELS: " x ", DIRECTION: " (sdir?"NORMAL":"REVERSE") "`nYOU CAN DO AUTO SETUP IF YOU WANT FASTER SPEED MACRO!`n`nautoclicker: " translatekeybind(KeyBinds[3]) "`nCPS: " Round(mt[1]*(1000/mt[2])) ", MODE: " (cmode? "HOLD":"TOGGLE") "`n`nkey smasher macro: " translatekeybind(KeyBinds[4]) "`nKEYS: `"" smashKeys "`", TIMES: " smashTimes "`n`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`n`nauto chat: " translatekeybind(KeyBinds[6]) "`nMESSAGE: `"" msg "`", CHATKEY: `"" chatKey "`"`n`nlag switch: " translatekeybind(KeyBinds[7]) "`nMAX TIME: " ltime " seconds`n`n`npress OK to customize the macros or for more tools`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():(ExitApp())) {
     checkEnviroment()
 }
+

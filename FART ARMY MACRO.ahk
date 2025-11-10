@@ -440,7 +440,7 @@ speedCalibrate(originalx) {
             goto redo
         }
         ToolTip("HOLD E TO STOP CALIBRATING!`n`nADJUSTED BY OFFSET: " offset "`n`nLOWEST ANGLE FOUND:`nPIXEL: " lowest[1] "`nANGLE: " lowest[2] "`n`nCURRENTLY BEING TESTED:`nPIXEL: " x2 "`nANGLE: " angle,A_ScreenWidth/2,A_ScreenHeight/2+50)
-        if(Abs(angle) < Abs(lowest[2]) && Abs(angle) > 0.1) { ;perfect 180 unstable for speed (I tested)
+        if(Abs(angle) < Abs(lowest[2]) && Abs(angle) >= 0.095) { ;perfect 180 unstable for speed (I tested)
             lowest := [x2,angle]
         }
         offset := ((180-b+angle+360*Round(x2/(360/a)))/a)-x2
@@ -871,4 +871,3 @@ if(!restart) {
 while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nSTART: " tmin ", END: " tmax ", KEYS: `"" tmash "`", MODE: " (tmode? "FULL AUTO, DELAY: " delay "ms":"SEMI AUTO") "`n`nspeed macro: " translatekeybind(KeyBinds[2]) "`nWASD: `"" keys "`",FPS: " fps ", PIXELS: " x ", DIRECTION: " (sdir?"NORMAL":"REVERSE") "`nYOU CAN DO AUTO SETUP IF YOU WANT FASTER SPEED MACRO!`n`nautoclicker: " translatekeybind(KeyBinds[3]) "`nCPS: " Round(mt[1]*(1000/mt[2])) ", MODE: " (cmode? "HOLD":"TOGGLE") "`n`nkey smasher macro: " translatekeybind(KeyBinds[4]) "`nKEYS: `"" smashKeys "`", TIMES: " smashTimes "`n`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`n`nauto chat: " translatekeybind(KeyBinds[6]) "`nMESSAGE: `"" msg "`", CHATKEY: `"" chatKey "`"`n`nlag switch: " translatekeybind(KeyBinds[7]) "`nMAX TIME: " ltime " seconds`n`n`npress OK to customize the macros or for more tools`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():(ExitApp())) {
     checkEnviroment()
 }
-

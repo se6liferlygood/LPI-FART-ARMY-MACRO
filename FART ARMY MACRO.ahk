@@ -343,7 +343,7 @@ speed() { ;customize speed
                 ToolTip(,,,7)
                 return
             }
-            Sleep 2000
+            Sleep 1000
             while(WinExist("Pick an app")&&A_Index<30) {  ;I FUCKING HATE THIS POP UP!
                 WinClose("Pick an app")
                 Sleep 25
@@ -410,7 +410,7 @@ speedCalibrate(originalx) {
         SendEvent("t")
         Sleep 100
     }
-    while(FileRead("files\speedY") = "") {
+    while(FileRead("files\speedY") = "" && !GetKeyState("e","P")) {
         SleepEx(1)
     }
     Yarr := StrSplit(FileRead("files\speedY")," ")
@@ -421,7 +421,7 @@ speedCalibrate(originalx) {
     FileAppend("","files\speedY")
     offset := 0
     x2 := 0
-    while !GetKeyState("e","P")&&lowest[1]<=A_ScreenWidth {
+    while !GetKeyState("e","P")&&x2<=A_ScreenWidth {
         x2 := (180-b+360*nthRoot)/a-offset
         x2 := Round(x2)
         ;ToolTip(x,A_ScreenWidth/2,A_ScreenHeight/2-50)
@@ -430,7 +430,7 @@ speedCalibrate(originalx) {
         SendEvent("t")
         redo:
         try {
-            while(FileRead("files\speedY") = "") {
+            while(FileRead("files\speedY") = "" && !GetKeyState("e","P")) {
                 SleepEx(1)
             }
             nthRoot++
@@ -871,3 +871,4 @@ if(!restart) {
 while(MsgBox("YOU CAN PRESS SOMEWHERE ELSE TO HIDE THIS!`n`n`nuse toolbar macro: " translatekeybind(KeyBinds[1]) "`nSTART: " tmin ", END: " tmax ", KEYS: `"" tmash "`", MODE: " (tmode? "FULL AUTO, DELAY: " delay "ms":"SEMI AUTO") "`n`nspeed macro: " translatekeybind(KeyBinds[2]) "`nWASD: `"" keys "`",FPS: " fps ", PIXELS: " x ", DIRECTION: " (sdir?"NORMAL":"REVERSE") "`nYOU CAN DO AUTO SETUP IF YOU WANT FASTER SPEED MACRO!`n`nautoclicker: " translatekeybind(KeyBinds[3]) "`nCPS: " Round(mt[1]*(1000/mt[2])) ", MODE: " (cmode? "HOLD":"TOGGLE") "`n`nkey smasher macro: " translatekeybind(KeyBinds[4]) "`nKEYS: `"" smashKeys "`", TIMES: " smashTimes "`n`nfreeze toggle: " translatekeybind(KeyBinds[5]) "`n`nauto chat: " translatekeybind(KeyBinds[6]) "`nMESSAGE: `"" msg "`", CHATKEY: `"" chatKey "`"`n`nlag switch: " translatekeybind(KeyBinds[7]) "`nMAX TIME: " ltime " seconds`n`n`npress OK to customize the macros or for more tools`npress cancel to exit this macro",title,"OKCancel")="OK"? customizeMenu():(ExitApp())) {
     checkEnviroment()
 }
+

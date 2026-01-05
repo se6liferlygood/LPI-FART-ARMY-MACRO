@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>telamonster reload</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <img src="toolbar.png" alt="">
+            <p>
+                I dont feel like waiting for the cooldown after finishing my combos from <a href="combo.html">gear combo example</a><br>
+                so what I can do is use a macro that goes to my inventory and replaces the 2 telamonsters with new ones <br><br>
+
+                now what do I need for this?<br>
+                first of all I need the key for inventory<br>
+                its not the same for all keyboard layouts so lets store it in a <a href="../variables/variables.html">custom variables</a><br>
+                for me the inventory button is "§"<br>
+            </p>
+            <div class="code">V‡inv‡="§"</div>
+            <p>
+                I also need the coordinates for these 4 points:
+            </p>
+            <img src="telamonsterInventory.png" alt="">
+            <p>
+                now lets simplify it a bit<br>
+                I notice that for 3 and 4 I can use the same y value<br>
+                now lets get everything we need and assign them to <a href="../variables/variables.html">custom variables</a><br>
+                CTRL ALT M to get the x and y axis value of each point <br>
+                it turns out like this for me:
+            </p>
+            <div class="code">
+                V‡inv‡="§"<br>
+                V‡SX‡=‡W‡*189/320 V‡SY‡=‡H‡*221/360<br>
+                V‡NX‡=‡W‡*73/192 V‡NY‡=‡H‡*703/1080<br>
+                V‡TX1‡=‡W‡*53/128 V‡TX2‡=‡W‡*417/640 V‡TY‡=‡H‡*11/12<br>
+            </div>
+            <p>
+                ‡SX‡ and ‡SY‡ are the x and y value for point 1 (S for search)<br>
+                ‡NX‡ and ‡NY‡ are the x and y value for point 2 (N for new)<br>
+                ‡TX1‡ is the x value for point 3 (T is for toolbar)<br>
+                ‡TX2‡ is the x value for point 4<br>
+                ‡TY‡ is the y value for point 3 and 4 (they can share the same y value)<br><br>
+
+                now how can I use all this to replace the telamonsters?<br>
+                it is obvious that I first need to search telamonster so lets do that using MC and T<br>
+            </p>
+            <div class="code">
+                V‡inv‡="§"<br>
+                V‡SX‡=‡W‡*189/320 V‡SY‡=‡H‡*221/360<br>
+                V‡NX‡=‡W‡*73/192 V‡NY‡=‡H‡*703/1080<br>
+                V‡TX1‡=‡W‡*53/128 V‡TX2‡=‡W‡*417/640 V‡TY‡=‡H‡*11/12<br><br>
+
+                K‡inv‡ WF50<br>
+                MC(‡SX‡,‡SY‡) T(telamonster) {ENTER}
+            </div>
+            <p>
+                K is <a href="../input/key/key.html">key input</a>, WF is <a href="../wait/wait.html">wait flag</a>, MC is <a href="../input/mouse/mouse.html">move mouse and click</a>, T is <a href="../input/textInput/text.html">text input</a>, {ENTER} is <a href="../input/specialKeys/special.html">special key</a><br>
+                ok after this lets first take out the old telamonsters by dragging them to the middle of the screen<br>
+                we can do that using MD
+            </p>
+            <div class="code">
+                V‡inv‡="§"<br>
+                V‡SX‡=‡W‡*189/320 V‡SY‡=‡H‡*221/360<br>
+                V‡NX‡=‡W‡*73/192 V‡NY‡=‡H‡*703/1080<br>
+                V‡TX1‡=‡W‡*53/128 V‡TX2‡=‡W‡*417/640 V‡TY‡=‡H‡*11/12<br><br>
+
+                K‡inv‡ WF50<br>
+                MC(‡SX‡,‡SY‡) T(telamonster) {ENTER}<br>
+                MD(‡TX1‡,‡TY‡,‡W‡/2,‡H‡/2) MD(‡TX2‡,‡TY‡,‡W‡/2,‡H‡/2)<br>
+            </div>
+            <p>
+                MD is <a href="../input/mouse/mouse.html">mouse drag</a><br>
+                this script will drag the first and second telamonster to (‡W‡/2,‡H‡/2) which is the middle of the screen<br>
+                ok now what do we do after this?<br>
+                we use point 2 shown in the earlier image to drag out the new telamonsters<br>
+                it can be done like this:
+            </p>
+            <div class="code">
+                V‡inv‡="§"<br>
+                V‡SX‡=‡W‡*189/320 V‡SY‡=‡H‡*221/360<br>
+                V‡NX‡=‡W‡*73/192 V‡NY‡=‡H‡*703/1080<br>
+                V‡TX1‡=‡W‡*53/128 V‡TX2‡=‡W‡*417/640 V‡TY‡=‡H‡*11/12<br><br>
+
+                K‡inv‡ WF50<br>
+                MC(‡SX‡,‡SY‡) T(telamonster) {ENTER}<br>
+                MD(‡TX1‡,‡TY‡,‡W‡/2,‡H‡/2) MD(‡TX2‡,‡TY‡,‡W‡/2,‡H‡/2)<br>
+                MD(‡NX‡,‡NY‡,‡TX1‡,‡TY‡) MD(‡NX‡,‡NY‡,‡TX2‡,‡TY‡)<br>
+                K‡inv‡
+            </div>
+            <p>
+                now this will drag out new telamonster to the points 3 and 4<br>
+                K‡inv‡ is put at the end to close inventory<br>
+                this script will now take out old telamonster and replace them with new ones!<br><br>
+
+                however if you do more than this then you should do it using <a href="math.html">this method</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

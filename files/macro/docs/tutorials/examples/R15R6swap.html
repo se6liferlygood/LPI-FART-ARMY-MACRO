@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        img {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>R15/R6 swap</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+           <p>
+                R15/R6 swap can be done 2 ways, UI navigation or mouse movement <br>
+                I prefer mouse movement over UI navigation because its more stable <br>
+                but I will show 2 ways to do this using these 2 methods
+
+                <hr>
+                <b>MOUSE MOVEMENT METHOD</b><br><br>
+                
+                can be done using 2 MC and 1 W<br>
+           </p>
+           <img src="LPIbar.png" alt="">
+           <p>
+                I hold my cursor over the gear icon then press CTRL ALT M to get its coordinates<br>
+                I copy the coordinates and use that for MC <br><br>
+                for me it turns out like this:
+           </p>
+           <div class="code">MC(‡W‡*1829/1920,‡H‡*17/360)</div>
+           <p>
+                this script would press the gear icon<br>
+                now whats left is to make it press rigtype setting<br>
+           </p>
+            <img src="R15R6.png" alt="">
+            <p>
+                so again I hold my cursor over the button that needs to be clicked and I press CTRL ALT M to get its coordinates <br>
+                I also add a W500 to wait 500ms before clicking it<br>
+                so for me it turns out like this:<br>
+            </p>
+            <div class="code">MC(‡W‡*1829/1920,‡H‡*17/360) W500 MC(‡W‡*1181/1920,‡H‡*17/24)</div>
+            <p>
+                MC moves <a href="../input/mouse/mouse.html">mouse and clicks</a>, W is <a href="../wait/wait.html">wait</a><br>
+                what this script now does is that it clicks the gear icon, waits 500ms then it presses rigtype setting <br>
+                this script now does R15/R6 swap
+            </p>
+            <hr>
+            <p>
+                <b>UI NAVIGATION METHOD</b><br><br>
+                UI navigation key varies across keyboards <br>
+                its not the same key for everyone <br>
+                so we create a <a href="../variables/variables.html">custom variable</a> which the UI navigation key is stored in<br>
+                we do this so that others who use our script can easily change it if their UI navigation key is different<br>
+                UI navigation key on the english keyboard layout is "\"" so I will use it in this example<br><br>
+
+                we first create a <a href="../variables/variables.html">custom variable</a> in which we assign the UI navigation key to:
+            </p>
+            <div class="code">V‡UI‡="\"</div>
+            <p>
+                after this I toggle UI navigation and see where it starts<br>
+                I see that it starts out here:
+            </p>
+            <img src="LPIbarUI1.png" alt="">
+            <p>
+                for some stupid ass reason theres not always the same amount of UI boxes there in LPI as of now<br>
+                so what we do is that we move it to another point where we will be sure it stays at always<br>
+                regardless of if theres more or less UI boxes added<br><br>
+
+                so we do this to start out at here:<br>
+            </p>
+            <div class="code">
+                V‡UI‡="\"<br>
+                K‡UI‡DDDDDDDDDDDDDDDDD
+            </div>
+            <img src="LPIbarUI2.png" alt="">
+            <p>
+                now I can see that I only need to press A one time to end up at gear icon
+                so we do this:
+            </p>
+            <div class="code">
+                V‡UI‡="\"<br>
+                K‡UI‡DDDDDDDDDDDDDDDDD<br>
+                KA {ENTER}
+            </div>
+            <p>
+                K is <a href="../input/key/key.html">key input</a>, {ENTER} is a <a href="../input/specialKeys/special.html">special key</a> <br>
+                what this script does is that if first turns on UI navigation then it goes over to the gear icon and presses enter <br><br>
+
+                after this I dont turn off UI navigation <br>
+                but I instead figure out how I am supposed to press the WASD keys to end up at rig type setting <br><br>
+
+                I notice that if I press S then A after this I end up at the CLOSE button:
+            </p>
+            <img src="LPIbarUI3.png" alt="">
+            <p>
+                whats left is to press W to go up to rig type like this:
+            </p>
+            <img src="LPIbarUI4.png" alt="">
+            <p>
+                so the script now becomes:
+            </p>
+            <div class="code">
+                V‡UI‡="\"<br>
+                K‡UI‡DDDDDDDDDDDDDDDDD<br>
+                KA {ENTER} W500 KSAW {ENTER} K‡UI‡
+            </div>
+            <p>
+                W is <a href="../wait/wait.html">wait</a><br>
+                so what this script does is that it first turns on UI navigation then goes to gear icon <br>
+                it presses gear icon then it waits 500ms then it goes to rigtype settings and presses it <br>
+                then it turns off UI navigation and R15/R6 swap is done!
+            </p>
+        </div>
+    </div>
+</body>
+</html>

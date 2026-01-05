@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>gear combo example</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <img src="toolbar.png">
+            <p>
+                at 1 I have "Chopper Broom", at 3 and 0 I have "Telamonser: the Chaos Edge" <br><br>
+
+                ChopperBroom can be used to stop your momentum <br>
+                what I want is to use any of the 2 telamonsters abilites and quickly equip ChopperBroom <br><br>
+
+                I can do this using 2 scripts <br>
+                one for the first and one for the second
+            </p>
+            <div class="code">K3QE1</div>
+            <div class="code"> K0QE1</div>
+            <p>
+                K is <a href="../input/key/key.html">key input</a><br>
+                these 2 scripts would equip Telamonster, press Q and E, then equip ChopperBroom <br><br>
+
+                but there is a problem with this <br>
+                if I equip and unequip ChopperBroom too fast I get stuck <br>
+                to fix this I can block keys that I am likely to accidentally press <br>
+                the script can also wait for a bit so I dont accidentally press it 2 times too fast
+            </p>
+            <div class="code">K3QE H4321 W100</div>
+            <div class="code">K0QE H4321 W100</div>
+            <p>
+                H is <a href="../input/holdRelease/holdRelease.html">hold</a>, W is <a href="../wait/wait.html">wait</a><br>
+                if the macro holds down these keys then it makes sure I cant press them <br>
+                it will use Telamonster abilites then hold the keys from 4 to 1, ending at 1 <br>
+                it ending at 1 makes sure I equip ChopperBroom <br>
+                W100 makes sure the script runs for 100ms and holds the keys 4 to 1 for 100ms <br>
+                this makes sure I cant use this script 2 times too fast or accidentally press any of the keys from 4 to 1 <br><br>
+
+                this mostly solves the problem of making sure I dont get stuck<br>
+                I use these scripts in combinations with <a href="telamonsterReload.html">telamonster reload</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

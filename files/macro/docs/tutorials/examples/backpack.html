@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>use entire shown inventory</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <p>
+                we will be needing <a href="math.html">this formula</a> for this<br><br>
+
+                now lets look at our inventory and figure out what we need to do this<br>
+            </p>
+            <img src="numInventory.png" alt="">
+            <p>
+                I see that theres 4 rows and 10 columms<br><br>
+                we can click at all gears by using a loop inside a loop<br>
+                one loop will go through the rows and a loop inside that loop will go through the columns<br>
+                we will use <a href="math.html">this formula</a> to achieve this<br><br>
+
+                now what will we need for our formula?<br>
+                we will need 2 values for the loop that deals with the rows<br>
+                and 2 values for the loop that deals with the columns<br>
+            </p>
+            <img src="ValInventory.png" alt="">
+            <p>
+                with these 2 points we can get the 2 y values we need for the rows loop<br>
+                and we can get the 2 x values we need to the columns loop<br><br>
+
+                there is something we need to think about when doing this<br>
+                namely that (0,0) starts on the top left corner<br>
+                this means y<sub>2</sub> is greater than y<sub>1</sub><br><br>
+
+                lets calculate the 2 a values we need and store them in <a href="../variables/variables.html">custom variables</a><br>
+                for me it turns out like this (I use CTRL ALT M to get coordinates)
+            </p>
+            <div class="code">
+                V‡X1‡=‡W‡*83/240 V‡Y1‡=‡H‡*701/1080<br>
+                V‡X2‡=‡W‡*125/192 V‡Y2‡=‡H‡*901/1080<br>
+                V‡Ca‡=(‡X2‡-‡X1‡)/9 V‡Ra‡=(‡Y2‡-‡Y1‡)/3
+            </div>
+            <p>
+                here I stored all the x values and y values in custom variables<br>
+                and I calculated the a value for the rows and a value for the columns<br><br>
+
+                we can simplfy this<br>
+                we will never use ‡X2‡ or ‡Y2‡ except for when calculating the a values<br>
+                so the script can be simplifed by substituting ‡X2‡ and ‡Y2‡ like this
+            </p>
+            <div class="code">
+                V‡X1‡=‡W‡*83/240 V‡Y1‡=‡H‡*701/1080<br>
+                V‡Ca‡=(‡W‡*125/192-‡X1‡)/9 V‡Ra‡=(‡H‡*901/1080-‡Y1‡)/3
+            </div>
+            <p>
+                now lets first make a loop that goes through the rows by using <a href="math.html">this formula</a>
+            </p>
+            <div class="code">
+                V‡X1‡=‡W‡*83/240 V‡Y1‡=‡H‡*701/1080<br>
+                V‡Ca‡=(‡W‡*125/192-‡X1‡)/9 V‡Ra‡=(‡H‡*901/1080-‡Y1‡)/3<br><br>
+
+                WF25<br>
+                L4 V‡CY‡=(‡I‡-1)*‡Ra‡+‡Y1‡ MC(‡X1‡,‡CY‡) KQE END
+            </div>
+            <p>
+                WF is <a href="../wait/wait.html">wait flag</a>, L and END is <a href="../loops/loops.html">loop</a>, MC is <a href="../input/mouse/mouse.html">move mouse and click</a>, K is <a href="../input/key/key.html">key input</a><br>
+                I use the <a href="../variables/variables.html">inbuilt variable</a> ‡I‡ to loop through all the boxes using <a href="math.html">this formula</a><br>
+                I store the y value in ‡CY‡ for a reason that I will show later<br>
+                I use MC to move the mouse and click at position<br>
+                I use KQE to use the keys Q and E after click<br><br>
+
+                now this row loop already uses the first column<br>
+                this means that the columns loop only needs to loop 9 times<br>
+                columns loop will happen after KQE in the script shown above
+            </p>
+            <div class="code">
+                V‡X1‡=‡W‡*83/240 V‡Y1‡=‡H‡*701/1080<br>
+                V‡Ca‡=(‡W‡*125/192-‡X1‡)/9 V‡Ra‡=(‡H‡*901/1080-‡Y1‡)/3<br><br>
+
+                WF25<br>
+                L4 V‡CY‡=(‡I‡-1)*‡Ra‡+‡Y1‡ MC(‡X1‡,‡CY‡) KQE<br>
+                L9 MC(‡I‡*‡Ca‡+‡X1‡,‡CY‡) KQE END END C<br>
+            </div>
+            <p>
+                C is <a href="../input/mouse/mouse.html">click</a><br>
+                here I moved down the L4's END and then added the columns loop before it<br>
+                here you can see ‡CY‡ in use<br>
+                the reason why im doing ‡I‡*‡Ca‡+‡X1‡ is because (‡I‡+1-1) = ‡I‡<br>
+                I also added a C so the last gear will be unequipped when the script is finished<br><br>
+
+                we could make this better by making the script scroll down 4 rows<br>
+                I have noticed that it scrolls down 4 rows if I do 2 {WHEELDOWN}<br>
+                {WHEELDOWN} is a <a href="../input/specialKeys/special.html">special key</a><br>
+                so I can just add them to the script like this
+            </p>
+            <div class="code">
+                V‡X1‡=‡W‡*83/240 V‡Y1‡=‡H‡*701/1080<br>
+                V‡Ca‡=(‡W‡*125/192-‡X1‡)/9 V‡Ra‡=(‡H‡*901/1080-‡Y1‡)/3<br><br>
+
+                WF25<br>
+                L4 V‡CY‡=(‡I‡-1)*‡Ra‡+‡Y1‡ MC(‡X1‡,‡CY‡) KQE<br>
+                L9 MC(‡I‡*‡Ca‡+‡X1‡,‡CY‡) KQE END END C<br>
+                WF0 {WHEELDOWN} {WHEELDOWN}<br>
+            </div>
+            <p>
+                I disabled wait flag by setting it to 0 after C so it scrolls down in an instant<br><br>
+
+                this script can now use your entire inventory!
+            </p>
+        </div>
+    </div>
+</body>
+</html>

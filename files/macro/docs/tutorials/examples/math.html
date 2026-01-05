@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>useful math formula for macros</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <p>
+            lets imagine that we have 5 boxes stacked next to each other like this<br>
+            (it could be any amount of boxes)
+            </p>
+            <div class="boxes">
+                <div>index 1</div><div>index 2</div><div>index 3</div><div>index 4</div><div>index 5</div>
+            </div>
+            <p>
+                we only know the x axis value for box 1 and 5<br>
+                all of the boxes share the same y value<br><br>
+
+                lets call the x value of box 1 x<sub>1</sub><br>
+                lets call the x value of box 5 x<sub>2</sub><br>
+                they share the same y value<br><br>
+
+                heres what I mean
+            </p>
+            <div class="boxes">
+                <div>index 1<br>(x<sub>1</sub>,y)</div><div>index 2</div><div>index 3</div><div>index 4</div><div>index 5<br>(x<sub>2</sub>,y)</div>
+            </div>
+            <p>
+                so from this I want to make a formula which gives the x value for any box<br>
+                this formula will only use these 2 x values<br><br>
+
+                the formula goes like this:<br><br>
+                n: amount of boxes<br>
+                i: box index<br><br>
+
+                we store the a value<br>
+                a = (x<sub>2</sub>-x<sub>1</sub>)/(n-1)<br><br>
+
+                and use it in this formula which gives the x axis value for any box index:<br>
+                (i-1)*a+x<sub>1</sub><br><br>
+
+                so for example if x<sub>1</sub> is 1 and x<sub>2</sub> is 5 and theres 5 boxes<br>
+                then a would be: (5-1)/(5-1) = 1<br>
+                we store the a value and use that in our formula<br>
+                now lets say I want the x value for box number 3<br>
+                so I plug in 3 into the formula by replacing i and get:<br>
+                (3-1)*1 + 1 = 3<br>
+                this makes sense<br><br><br><br>
+                <hr>
+                <b>YOU DONT NEED TO KNOW THIS IF YOU ONLY CARE ABOUT HOW TO DO IT</b><br><br>
+                
+                heres how I came up with this formula<br>
+                what I want is a function which gives the x axis value for any box <br>
+                using the x value of the first and last box<br>
+                it is obvious that this function must be linear so I did this:<br><br>
+
+                f(x) = a*x+b<br>
+                f(1) = x<sub>1</sub><br>
+                f(n) = x<sub>2</sub><br><br>
+
+                solve for a and b given these 3 equations<br>
+                the solution is obvious but I will write it out without using any formulas<br><br>
+
+
+                we write f(1) and f(n) as this using f(x):<br>
+                f(1) = a+b = x<sub>1</sub><br>
+                f(n) = a*n+b = x<sub>2</sub><br><br>
+
+                now lets focus on these 2 equations<br>
+                1: a+b = x<sub>1</sub><br>
+                2: a*n+b = x<sub>2</sub><br><br>
+
+                we can see this from the first equation:<br>
+                b = x<sub>1</sub>-a<br><br>
+
+                subtract the 2nd equation by the first equation and we get this this:<br>
+                x<sub>2</sub>-x<sub>1</sub> = a*n+b-(a+b)<br>
+                x<sub>2</sub>-x<sub>1</sub> = a*n-a<br>
+                x<sub>2</sub>-x<sub>1</sub> = a*(n-1)<br><br>
+
+                divide by (n-1) and we get this:<br>
+                a = (x<sub>2</sub>-x<sub>1</sub>)/(n-1)<br><br>
+
+                so now we know:<br>
+                a = (x<sub>2</sub>-x<sub>1</sub>)/(n-1)<br>
+                b = x<sub>1</sub>-a<br><br>
+
+                we substitue for b in f(x) and we get this:<br>
+
+                f(x) = a*x+(x<sub>1</sub>-a)<br>
+                f(x) = (x-1)*a+x<sub>1</sub><br><br>
+
+                so the only thing we need is to calculate a and store it in a variable<br>
+                then use that for the formula in our macros<br>
+                a = (x<sub>2</sub>-x<sub>1</sub>)/(n-1)<br>
+                f(x) = (x-1)*a+x<sub>1</sub><br><br>
+
+                you can also come up with this formula by just looking at the boxes
+            </p>
+        </div>
+    </div>
+</body>
+</html>

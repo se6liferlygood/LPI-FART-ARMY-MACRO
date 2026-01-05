@@ -2260,7 +2260,7 @@ serverInfo() {
 }
 
 AlzemuCopyPaste() {
-
+    Run "files\LPI COPY LIST\index.html"
 }
 
 global cfunc := [toolbar,speed,autoc,ckeySmasher,cautochat,clagSwitch,CustomizeKeybinds,rejoin,serverHop,serverInfo,AlzemuCopyPaste,fartArmyScriptList]

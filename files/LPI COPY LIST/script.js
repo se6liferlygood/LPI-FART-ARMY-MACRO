@@ -433,8 +433,9 @@ function renderCodes() {
     Object.keys(codes).forEach(category => {
         totalCount += codes[category].length;
         
-        codes[category].forEach(code => {
+        for(let i = 0; i < codes[category].length; i++) {
             if (currentCategory !== 'all' && currentCategory !== category) return;
+            const code = codes[category][category==="custom"?codes[category].length-i-1:i];
             if (searchTerm && !code.id.includes(searchTerm) && !code.desc.toLowerCase().includes(searchTerm.toLowerCase())) return;
 
             visibleCount++;
@@ -499,7 +500,7 @@ function renderCodes() {
             card.appendChild(codeId);
             card.appendChild(desc);
             content.appendChild(card);
-        });
+        }
     });
 
     if (visibleCount === 0) {

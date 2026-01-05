@@ -1992,7 +1992,6 @@ getCurrent(update := true, getServer := true) {
             }
             version := arr[1]
         } catch as err {
-            MsgBox(err.Message)
             Sleep 50
             done := false
         }

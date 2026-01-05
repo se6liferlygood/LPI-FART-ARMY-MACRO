@@ -866,7 +866,7 @@ class fartArmyScript { ;I like the syntax and way of programming classes, I wish
             dstr := this.syntaxError2(dstr,"YOU DONT HAVE AS MANY L AS THERE ARE END!`n`namount of L: " Lcount "`namount of END: " ENDcount "`n`nYOU NEED TO DEFINE WHERE ALL LOOPS START AND END!")
             goto syntaxRedo ;no recursion needed, nuh uh
         } else if(user) {
-            MsgBox("YOU PRESS CTRL ALT E TO EXIT A RUNNING FART ARMY SCRIPT!",title)
+            MsgBox("YOU PRESS CTRL ALT E TO EXIT A RUNNING FART ARMY SCRIPT!",title,"T5")
         }
         this.variables.Clear()
         return [Rstr,Marr]

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>statements</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <p>
+                <b>
+                a statement only does the next action if it is TRUE<br>
+                otherwise it skips the next action
+                <br><br>
+                </b>
+                you type statements with: () <br><br>
+                like this for example: (W)<br>
+                or: (‡a‡==‡b‡)<br><br>
+                <b id="loopNote">LOOPS AND STATEMENTS</b> <br>
+                if a statement is put before an L then it can skip the entire <a href="../loops/loops.html">loop</a><br>
+                if a statement is put before <a href="../loops/loops.html">END</a> then it can exit the loop <br>
+            </p>
+            <hr>
+            <p>
+                EQUAL TO: == <br>
+                NOT EQUAL TO: != <br>
+                GREATER THAN: &gt; <br>
+                GREATER THAN OR EQUAL TO: &gt;= <br>
+                LESS THAN: &lt; <br>
+                LESS THAN OR EQUAL TO: &lt;=<br><br>
+                AND: && <br>
+                OR: || <br>
+                NOT: !
+            </p>
+            <hr>
+            <h3>KEY LOGIC</h3>
+            <p>
+                the <a href="../variables/variables.html">inbuilt variable</a> ‡K‡ is very usefull here <br><br>
+
+                key logic is used so that actions only happens if keys are held a certain way <br>
+                keys you type out will be true if they are being held <br>
+                theres 2 ways to type out keys <br>
+                for single letters you can just type them out <br>
+                for number keys or other keys you use {}, <a href="../input/specialKeys/special.html">special keys</a><br>
+                for example:
+            </p>
+            <div class="code">W1000 (W) K1</div>
+            <p>
+                W is <a href="../wait/wait.html">wait</a>, K is <a href="../input/key/key.html">key input</a><br>
+                would only press 1 if W is being held <br>
+                another example using the <a href="../variables/variables.html">inbuilt variable</a> ‡K‡
+            </p>
+            <div class="code">W1000 (‡K‡) K1</div>
+            <p>
+                this script would only press 1 if if the script keybind key is being held <br>
+                for example if the keybind is ALT A then 1 would only be pressed if A is being held <br>
+                theres another example of ‡K‡ being used in <a href="../variables/variables.html">variables</a> to make an autoclicker<br><br>
+
+                you can specify keys with {}, it is the same keys as <a href="../input/specialKeys/special.html">special keys</a> but you cant do up or down then <br>
+                you also use {} to specify numbers keys<br>
+                heres an example using number key and space:
+            </p>
+            <div class="code">WF1000 ({1}) T(you are holding 1!) ({SPACE}) T(you are holding space!)</div>
+            <p>
+                WF is <a href="../wait/wait.html">wait flag</a>, T is <a href="../input/textInput/text.html">text input</a><br>
+                this script would wait 1 second then check if you are holding 1 <br>
+                if you are holding 1 it will type out: "you are holding 1!"<br>
+                then it will wait 1 second then check if your holding space <br>
+                if you are holding space then it will type out: "you are holding space!" <br><br>
+
+                examples using && (AND) and || (OR)<br>
+            </p>
+            <div class="code">W1000 (Q&&E) K1</div>
+            <p>
+                this script only only press 1 if Q and E are being held
+            </p>
+            <div class="code">W1000 (Q||E) K1</div>
+            <p>
+                this script would only press 1 if Q or E or both are being held <br><br>
+                lets say you wanna pause a script if any WASD is being held <br>
+                you can do that using || (OR) and ! (NOT):
+            </p>
+                <div class="code">LF !(W||A||S||D) L C K21 END W100 !(‡K‡) END</div>
+            <p>
+                LF, L and END is <a href="../loops/loops.html">loop</a>, C is <a href="../input/mouse/mouse.html">click</a> <br>
+                using this <a href="#loopNote">fact about loops and statements</a> <br>
+                we can make sure that parts of script is only running if a statement is true <br>
+                C K21 only happens if W or A or S or D is NOT being held! <br>
+                this means NOTHING except wait happens if any WASD is being held <br>
+                !(‡K‡) before the last END makes sure that the LF only loops if the script keybind is NOT being held! <br>
+                this means for example if the keybind was ALT A then if you were holding A the script would stop!
+            </p>
+            <hr>
+            <h3>VALUES AND <a href="../variables/variables.html">VARIABLES</a> USED IN STATEMENTS</h3>
+            <p>
+                lets say your having a loop and you want it to press Q when the loop count is 5 <br>
+                you get the loop count using the <a href="../variables/variables.html">inbuilt variable</a> ‡I‡ <br>
+                for example:
+            </p>
+            <div class="code">L9 C (‡I‡==5) KQ W25 END</div>
+            <p>
+                KQ would only happen if the loop count is 5 <br>
+                lets say you want KQ to only happen if the loop count is greater than 5 <br>
+            </p>
+            <div class="code">L9 C (‡I‡&gt;5) KQ W25 END</div>
+            <p>
+                here KQ would only happen if the loop count is greater than 5 <br>
+                if you wanna include 5 then use &gt;= <br>
+                you can do the same thing with &lt;=, &lt; <br><br>
+
+                now lets say you want it to only do KQ if it is between 5 and 7 (5 and 7 too)<br>
+                you can do it like this:
+            </p>
+            <div class="code">L9 C (‡I‡&gt;=5&&‡I‡&lt;=7) KQ W25 END</div>
+            <p>
+                here KQ would only happen if the loops count is 5, 6 and 7 <br><br>
+                you can also use your own <a href="../variables/variables.html">custom variables</a> in your statements
+            </p>
+        </div>
+    </div>
+</body>
+</html>

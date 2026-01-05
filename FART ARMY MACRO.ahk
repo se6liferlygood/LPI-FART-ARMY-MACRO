@@ -1976,7 +1976,7 @@ closeRoblox() {
     }
 }
 
-getCurrent(update := true, getServers := true) {
+getCurrent(update := true, getServer := true) {
     global placeID, jobID, sList, title, version
     done := false
     while(!done&&A_Index<20) {
@@ -1986,12 +1986,13 @@ getCurrent(update := true, getServers := true) {
             if(update&&(arr[2]!=placeID||arr[3]!=jobID)) {
                 placeID := arr[2]=""? placeID:arr[2]
                 jobID := arr[3]=""? jobID:arr[3]
-                if(getServers) {
+                if(getServer) {
                     sList := getServers(placeID,jobID)
                 }
             }
             version := arr[1]
         } catch as err {
+            MsgBox(err.Message)
             Sleep 50
             done := false
         }
@@ -2064,7 +2065,7 @@ serverHop() {
         MsgBox("YOU ARE USING THIS MACRO AS " A_UserName "`nBUT YOU ARE USING ROBLOX AS " user "`n`nYOU MUST USE THIS MACRO AND ROBLOX ON THE SAME USER FOR SERVERHOP, REJOIN AND FREEZE TOGGLE TO WORK!",title)
         return false
     }
-    if(placeID!=""&&jobID!=""&&sList!=[]&&WinExist("Roblox")&&version!="") {
+    if(placeID!=""&&jobID!=""&&sList.Length!=0&&WinExist("Roblox")&&version!="") {
         closeRoblox()
         Run joinLink(placeID,sList[sList.Length])
         jobID := sList[sList.Length]
@@ -2273,6 +2274,8 @@ customizeMenu() {
         choose := InputBox("TYPE THE NUMBER TO CHOOSE CUSTOMIZATION:`n1. customize toolbar macro`n2. customize speed macro`n3. customize autoclicker`n4. customize key smasher macro`n5. customize auto chat`n6. customize lag switch`n`n7. customize keybinds`n`n`nTYPE THE NUMBER TO CHOOSE ACTION:`n8. rejoin`n9. serverhop`n10. current server info`n11. COPY PASTE TOOL`n12. LPI FART ARMY SCRIPTS`n`n`npress cancel to go back",title,'H' A_ScreenHeight/2.5).Value
         try {
             cfunc[choose]() ;very similar to switch indeed
+        } catch {
+            break
         }
     }
     return true

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>mouse input</h1>
+        <a href="../../../index.html">go back to main page</a><br>
+        <h2>mouse buttons</h2>
+        <div class="text">
+            <p>
+                you can click with C <br>
+                for example:
+            </p>
+            <div class="code">C WF500 C2 C3</div>
+            <p>
+                WF is <a href="../../wait/wait.html">wait flag</a><br>
+                the script would click once then double click then triple click <br><br>
+        
+                you use the other mouse buttons the same way! <br>
+                if no number is specified afterwards then it clicks once! <br><br>
+                right click: CR <br>
+                middle click (wheel button): CM
+            </p>
+        </div>
+        <h2>mouse movement</h2>
+        <div class="text">
+            <p>
+                <b>
+                    YOU GET SCREEN COORDINATE BY PRESSING CTRL ALT M <br>
+                    its shown as screen height and width mulitplied by a fraction <br><br>
+                </b>
+                you can move the cursor with M(x,y) <br>
+                note that you dont type x & y in fart army scripting like that! <br>
+                I only meant x axis and y axis! <br><br>
+                for example:
+            </p>
+            <div class="code">M(0,0)</div>
+            <p>
+                would move the mouse to (0,0) <br>
+                <b>(0,0) IS LOCATED ON THE TOP LEFT CORNER OF YOUR SCREEN!</b> <br><br>
+                here are some usefull inbuilt <a href="../../variables/variables.html">variables</a> that can be used in mouse movement: <br>
+                screen height: ‡H‡<br>
+                screen width: ‡W‡<br>
+                mouse x: ‡X‡<br>
+                mouse y: ‡Y‡<br><br>
+                here are some examples where they can be used:
+            </p>
+            <div class="code">M(‡X‡,‡Y‡+10)</div>
+            <p>
+                would move your cursor down by 10 pixels!<br>
+                (because 0,0 is at the top left corner of your screen)<br>
+            </p>
+            <div class="code">M(‡W‡/2,‡H‡/2)</div>
+            <p>
+                would move your cursor to the center of your screen!<br><br>
+                you can move & click at a coordinate by using MC(x,y) <br>
+                instead of using M then C
+            </p>
+            <hr>
+            <h3>MOUSE DRAG</h3>
+            <p>
+                you can drag stuff with MD(x<sub>1</sub>,y<sub>1</sub>,x<sub>2</sub>,y<sub>2</sub>) <br><br>
+                x<sub>1</sub>,y<sub>1</sub> is the starting point and what it drags <br>
+                x<sub>2</sub>,y<sub>2</sub> is where it drags to <br><br>
+                you can find an example of me using mouse drag here: <a href="../../examples/telamonsterReload.html">telamonster reload</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

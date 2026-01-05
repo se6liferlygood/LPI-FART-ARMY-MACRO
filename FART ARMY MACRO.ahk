@@ -475,7 +475,7 @@ skyboxm(ThisHotKey) {
         saveSettings()
         return
     }
-    base := InputBox3(&r,"CHOOSE AMOUNT OF SKYBOX PARTS`n`n1. 8 skybox parts`n2. 27 skybox parts`n3. 64 skybox parts`n4. 125 skybox parts`n`nWARNING: many skybox parts is laggy","",true)+1
+    base := InputBox3(&r,"HIDE LEADERBOARD IF IT IS IN THE WAY OF F3X!`n`nCHOOSE AMOUNT OF SKYBOX PARTS`n`n1. 8 skybox parts`n2. 27 skybox parts`n3. 64 skybox parts`n4. 125 skybox parts`n`nWARNING: many skybox parts is laggy","",true)+1
     if(!r||!(base>=2&&base<=5)) {
         saveSettings()
         return

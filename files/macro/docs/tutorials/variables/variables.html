@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>variables</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <p>
+                <b>
+                a variable is typed with this notation: ‡X‡<br>
+                you press ALT+SPACE to type it with fart army macro <br><br>
+                </b>
+                a variable is something in which a value is stored<br>
+                it can be a <a href="../keyLogic/logic.html">statement</a> result, number or text in fart army script
+            </p>
+            <h3>INBUILT VARIABLES</h3>
+            <p>
+                here is a list of inbuilt variables: <br>
+                <a href="../input/mouse/mouse.html">mouse x</a>: ‡X‡ <br>
+                <a href="../input/mouse/mouse.html">mouse y</a>: ‡Y‡ <br>
+                <a href="../input/mouse/mouse.html">screen width</a>: ‡W‡ <br>
+                <a href="../input/mouse/mouse.html">screen height</a>: ‡H‡ <br>
+                <a href="../loops/loops.html">current loop count</a>: ‡I‡ <br>
+                current script keybind: ‡K‡ <br>
+                time since boot in miliseconds: ‡T‡<br><br>
+
+                the inbuilt variable ‡K‡ tells what key your keybind is <br>
+                for example if a script used ALT K keybind then ‡K‡ would be K <br>
+                heres an example of ‡K‡ being used:
+            </p>
+            <div class="code">LF C W10 (‡K‡) END</div>
+            <p>
+                LF & END is <a href="../loops/loops.html">loop</a>, C is <a href="../input/mouse/mouse.html">click</a>, W is <a href="../wait/wait.html">wait</a>, (‡K‡) is a <a href="../keyLogic/logic.html">statement</a> <br>
+                this script would be autoclicking for as long as you hold the keybind <br><br>
+
+                the inbuilt variable ‡T‡ can be used to measure time in miliseconds (delta time) <br>
+                heres an example of delta time:
+            </p>
+            <div class="code">V‡time‡=‡T‡ W100 V‡dTime‡=‡T‡-‡time‡ T(‡dTime‡)</div>
+            <p>
+                T() is <a href="../input/textInput/text.html">text input</a>, V is custom variable <br>
+                this script would type out a number close to 100
+            </p>
+            <hr>
+            <h3>CUSTOM VARIABLES</h3>
+            <p>
+                you can make your own variables with V <br>
+                it works like this: V‡t‡=1 <br>
+                here I set the variable ‡t‡ to 1 <br>
+                this means <a href="../input/key/key.html">K</a>‡t‡ would press 1 <br>
+                you can do this is as well: V‡t‡=‡t‡+1 <br>
+                then K‡t‡ would type out 2 since it added 1 to 1 <br>
+                heres an example of variable being used:
+            </p>
+            <div class="code">V‡c‡=0 L10 V‡c‡=‡c‡+1 END T(counted up to ‡count‡)</div>
+            <p>
+                L10 & END is <a href="../loops/loops.html">loop</a>, T() is <a href="../input/textInput/text.html">text input</a><br>
+                this script would add 1 to the variable ‡c‡ 10 times <br>
+                it types out: counted up to 10 <br><br>
+
+                you can also store text in variables with "" <br>
+                it works like this:
+            </p>
+            <div class="code">V‡text‡="hello world!" T(‡text‡)</div>
+            <p>
+                this script would type out: hello world! <br>
+                it is good to use variables to avoid copy pasting big things over and over again <br>
+                they can also be used to calculate needed values <br><br>
+
+                you can find an example of me using variables in <a href="../examples/backpack.html">backpack</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

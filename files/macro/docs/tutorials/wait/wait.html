@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>wait</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <p>
+                you do wait using W <br>
+                wait works in miliseconds <br>
+                1 second is 1000 miliseconds <br>
+                for example:
+            </p>
+            <div class="code">K1 W1000 K2</div>
+            <p>
+                K is <a href="../input/key/key.html">key input</a><br>
+                would press 1, wait 1 second then press 2 <br><br>
+
+                but it can be annoying to type many W <br>
+                thats why wait flag exists, WF<br>
+                <b>wait flag adds a wait before every input action in miliseconds</b><br>
+                heres an example where wait flag is used:
+            </p>
+            <div class="code">K1 WF500 K2 K3</div>
+            <p>
+                this would press the key 1, wait 500ms then press 2, wait 500ms then press 3 <br><br>
+
+                you can use WF0 to disable wait flag if you have used it before<br><br>
+
+                <b>wait flag only happens for input actions and wait flag does not happen if W is used before <br>
+                this means W0 can be used to skip wait flag between input actions</b>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FART ARMY SCRIPTING TUTORIAL</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>loops</h1>
+        <a href="../../index.html">go back to main page</a><br>
+        <div class="text">
+            <p>
+                you do loops using L and END <br>
+                for example:
+            </p>
+            <div class="code">L10 K1 W10 END</div>
+            <p>
+                W is <a href="../wait/wait.html">wait</a>, K is <a href="../input/key/key.html">key input</a><br>
+                would press the key 1 10 times <br><br>
+                
+                it is the code between L and END that is executed as many times as you put after L<br><br>
+
+                now lets say you wanna loop forever or until you stop it! <br>
+                you can loop forever using LF <br>
+                heres an example:
+            </p>
+                <div class="code">LF K1 W1000 END</div>
+            <p>
+                this could for example be an AFK script making sure you dont get kicked <br>
+                it presses the key 1 every second <br><br>
+
+                but how do you stop forever loops or big loops?<br>
+                you can do that by pressing CTRL ALT E <br><br>
+                
+                there is another way to stop forever loops though <br>
+                you can do that using <a href="../keyLogic/logic.html">statements</a><br><br>
+
+                now how do you get what loop count you are on?<br>
+                you can do that using the inbuilt <a href="../variables/variables.html">variable</a>: ‡I‡<br>
+                it starts at 1 and ends at the number you chose after L, with LF it keeps on going forever <br>
+                for example:
+            </p>
+            <div class="code">WF25 L9 K‡I‡ C END K0 C</div>
+            <p>
+                WF is <a href="../wait/wait.html">wait flag</a>, C is <a href="../input/mouse/mouse.html">click</a><br>
+                this script would press the keys 1 to 9 and then 0 <br>
+                it would click each time it presses a key <br>
+                this script would use your entire toolbar in roblox <br><br>
+                <b>IF YOU ONLY TYPE L THEN IT IS THE SAME AS L1</b><br>
+                this can be used to group code for <a href="../keyLogic/logic.html">statements</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

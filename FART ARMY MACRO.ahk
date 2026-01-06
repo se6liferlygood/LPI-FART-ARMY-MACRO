@@ -1778,6 +1778,7 @@ toolbar() { ;customize use toolbar
             case 2:
                 tmash := StrLower(InputBox2("what keys will be pressed every gear swap?",tmash,false))
             case 3:
+                tindex := -1
                 tmin := Abs(Integer(InputBox2("where in the toolbar will this macro start?",tmin,true)))
                 tmin := (tmin=0||tmin>=10)? 1:tmin
                 tmax := Abs(Integer(InputBox2("where in the toolbar will this macro end?`n`n10 here means that it ends at 0",tmax,true)))

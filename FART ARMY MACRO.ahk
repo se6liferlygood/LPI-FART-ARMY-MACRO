@@ -1757,11 +1757,11 @@ speedCalibrate(originalx) {
 global tmin := 1, tmax := 10, tmode := true, tmash := "qe", tindex := -1, delay := 25 ;tmode false = semi auto, tmode true = full auto
 
 toolbarm(ThisHotKey) { ;use toolbar
-    global tmin, tmax, tmode, tmash, tindex := (tindex=-1)? tmin:tindex
+    global tmin, tmax, tmode, tmash, tindex := (tindex<=-1)? tmin:tindex
     key := getkey(ThisHotkey)
     while((tmode&&GetKeyState(key,"P"))||A_Index=1) {
-        SendEvent("{" (tindex) "}{LButton}{Raw}" tmash)
-        tindex := Mod(tmin+Mod(tindex-tmin+1,tmax-tmin+1),10)
+        SendEvent("{" Mod(tindex,10) "}{LButton}{Raw}" tmash)
+        tindex := tmin+Mod(tindex-tmin+1,tmax-tmin+1)
         SleepEx(delay*tmode-!tmode)
     }
     while(GetKeyState(key,"P")&&!tmode) {

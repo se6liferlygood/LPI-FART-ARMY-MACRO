@@ -31,4 +31,4 @@ serverhop
 current server info (like jobid, placeid and joinlink)  
 copy paste tool  
 
-it also has its own macro scripting language now and tutorials for it so u can add whatever macro u want to it
+it also has its own macro scripting language and tutorials for it so u can add whatever macro u want to it

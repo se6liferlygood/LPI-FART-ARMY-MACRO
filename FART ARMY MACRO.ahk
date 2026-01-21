@@ -1304,6 +1304,15 @@ setGlobal(var,value) {
     %var% := value
 }
 
+setGlobalArr(var,value) {
+    global
+    %var%
+
+    loop value.Length { ;if all data from the array doesnt get saved then there wont be any missing data
+        %var%[A_Index] := value[A_Index]
+    }
+}
+
 loadSettings() {
     global vars, space, space2, KeyBinds, keybindsm, keymap, scripts, scriptMap, f3x
     loop read "files\settings" {
@@ -1327,7 +1336,7 @@ loadSettings() {
                 }
             case "Array":
                 arr := StrSplit(A_LoopReadLine,space)
-                setGlobal(vars[A_Index],arr)
+                setGlobalArr(vars[A_Index],arr)
             default: 
                 setGlobal(vars[A_Index],A_LoopReadLine)
         }
@@ -1353,6 +1362,9 @@ loadSettings() {
         keysu .= "{" A_LoopField " up}"
     }
     loop KeyBinds.Length {
+        if(keymap[KeyBinds[A_Index]]) {
+            KeyBinds[A_Index] := CreateKeybind(KeyBinds[A_Index],"DUPLICATE KEYBIND WAS DETECTED DURING STARTUP`nTHIS MOST LIKELY HAPPENED BECAUSE YOU FUCKED THE SAVED DATA!")
+        }
         keymap[KeyBinds[A_Index]] := true
         try { ;yeah the user will prob change the keybind if they notice its not working
             Hotkey(KeyBinds[A_Index],keybindsm[A_Index],"On")
@@ -1935,15 +1947,12 @@ getServers(place,exclude) {
     }
 }
 
+
 global closeAction := ["l","{Enter}","{Escape}","l","{Enter}"]
 global robloxes := ["Roblox Game Client","Roblox","RobloxPlayerBeta.exe","RobloxPlayerInstaller.exe","RobloxPlayerInstaller.exe (32 bit)","Roblox (32 bit)","RobloxPlayerInstaller.exe (64 bit)","Roblox (64 bit)"] ;yep
 
 closeRoblox() {
     global closeAction, robloxes
-    while(WinExist("Pick an app")&&A_Index<20) {
-        WinClose("Pick an app")
-        Sleep 25
-    }
     if(WinExist("Roblox")) {
         BlockInput(1)
         WinActivate("Roblox")

@@ -1250,7 +1250,7 @@ Alt & Space:: {
 global vars := ["smashKeys","smashTimes","x","fps","sdir","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey","MPS","chatMode","ltime","f3x","skyboxID","skyboxSize","hasDoneSkyboxSetup","hasDoneSpeedCalibration"]
 global space := Chr(3), space2 := Chr(4)
 saveSettings() {
-    global vars, space, scripts, f3x
+    global vars, space, scripts, f3x§
     try {
         FileDelete("files\settings")
     }
@@ -1361,14 +1361,19 @@ loadSettings() {
         keysd .= "{" A_LoopField " down}"
         keysu .= "{" A_LoopField " up}"
     }
+    wasFucked := false
     loop KeyBinds.Length {
         if(keymap[KeyBinds[A_Index]]) {
+            wasFucked := true
             KeyBinds[A_Index] := CreateKeybind(KeyBinds[A_Index],"DUPLICATE KEYBIND WAS DETECTED DURING STARTUP`nTHIS MOST LIKELY HAPPENED BECAUSE YOU FUCKED THE SAVED DATA!")
         }
         keymap[KeyBinds[A_Index]] := true
         try { ;yeah the user will prob change the keybind if they notice its not working
             Hotkey(KeyBinds[A_Index],keybindsm[A_Index],"On")
         }
+    }
+    if(wasFucked) {
+        saveSettings()
     }
 }
 

@@ -1341,12 +1341,17 @@ loadSettings() {
                 setGlobal(vars[A_Index],A_LoopReadLine)
         }
     }
+    wasFucked := false
     if(FileExist("files\macro\fartArmyScripts")) {
         Marr := []
         loop read "files\macro\fartArmyScripts" {
             arr := StrSplit(A_LoopReadLine,space)
+            if(keymap[arr[1]]) {
+                wasFucked := true
+                arr[1] := CreateKeybind(arr[1],"DUPLICATE KEYBIND WAS DETECTED DURING STARTUP`nTHIS MOST LIKELY HAPPENED BECAUSE YOU FUCKED THE SAVED DATA!")
+            }
             keymap[arr[1]] := true
-            tArr := fartScript.compile(StrReplace(arr[3],Chr(5),Chr(10)),false) ;if startups get slow then I its this
+            tArr := fartScript.compile(StrReplace(arr[3],Chr(5),Chr(10)),false) ;if startups get slow then I guess its this
             tArr.Push(arr[2],arr[1])
             Marr.Push(tArr)
             scriptMap[tArr[4]] := tArr[2]
@@ -1361,7 +1366,6 @@ loadSettings() {
         keysd .= "{" A_LoopField " down}"
         keysu .= "{" A_LoopField " up}"
     }
-    wasFucked := false
     loop KeyBinds.Length {
         if(keymap[KeyBinds[A_Index]]) {
             wasFucked := true

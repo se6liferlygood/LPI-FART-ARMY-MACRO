@@ -1250,7 +1250,7 @@ Alt & Space:: {
 global vars := ["smashKeys","smashTimes","x","fps","sdir","keys","tmin","tmax","tmash","tmode","delay","mt","cmode","KeyBinds","restart","msg","chatKey","MPS","chatMode","ltime","f3x","skyboxID","skyboxSize","hasDoneSkyboxSetup","hasDoneSpeedCalibration"]
 global space := Chr(3), space2 := Chr(4)
 saveSettings() {
-    global vars, space, scripts, f3x§
+    global vars, space, scripts, f3x
     try {
         FileDelete("files\settings")
     }

@@ -2,7 +2,6 @@
 #SingleInstance Force
 ;CoordMode("ToolTip","Screen")
 SetTitleMatchMode(3)
-ProcessSetPriority("H")
 
 global users := [] ;all users roblox directories needs to get checked in case running as admin changes what user they run the macro as (otherwise there would be problems)
 

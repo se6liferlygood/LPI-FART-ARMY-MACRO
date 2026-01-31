@@ -1,6 +1,5 @@
 #Requires AutoHotkey v2.0.18+
 #SingleInstance Force
-ProcessSetPriority("R")
 SetKeyDelay(-1)
 SetMouseDelay(-1)
 CoordMode("ToolTip","Screen")
@@ -1390,6 +1389,9 @@ checkEnviroment() {
         if(FileExist("README.md")) {
             FileDelete("README.md")
         }
+        if(DirExist(".vscode")) {
+            DirDelete(".vscode")
+        }
         if(A_ScriptName != "FART ARMY MACRO.ahk") {
             MsgBox("THIS FILE MUST BE NAMED FART ARMY MACRO",title)
             ExitApp()
@@ -1405,8 +1407,8 @@ checkEnviroment() {
             ExitApp()
         }
     } catch {
-        MsgBox("YOU HAVE PROBABLY DOWNLOADED THIS MACRO INCORRECTLY!`n`nYOU ARE SUPPOSED TO DOWNLOAD IT THROUGH THE DOWNLOAD LINK IN README THEN EXTRACT THE ZIP FILE!",title)
-        ExitApp()
+       MsgBox("YOU HAVE PROBABLY DOWNLOADED THIS MACRO INCORRECTLY!`n`nYOU ARE SUPPOSED TO DOWNLOAD IT THROUGH THE DOWNLOAD LINK IN README THEN EXTRACT THE ZIP FILE!",title)
+       ExitApp()
     }
 }
 checkEnviroment()
@@ -1513,11 +1515,15 @@ freeze(bool:=false,toggle:=false,key:="") {
                 DllCall("ntdll.dll\NtSuspendProcess", "Int", h)
                 SuspendedPID[PID] := true
             } else if((toggle&&SuspendedPID[PID])||(!bool&&SuspendedPID[PID])) {
-                if(toggle) {
-                    ToolTip(,,,2)
-                }
+                ToolTip(,,,2)
                 DllCall("ntdll.dll\NtResumeProcess", "Int", h)
-                SuspendedPID[PID] := false
+                SuspendedPID.Delete(PID)
+            }
+        } else if(!bool) {
+            ToolTip(,,,2)
+            for key in SuspendedPID {
+                DllCall("ntdll.dll\NtResumeProcess", "Int", DllCall("OpenProcess", "uInt", 0x1F0FFF, "Int", 0, "Int", key))
+                SuspendedPID.Delete(key)
             }
         }
     }
